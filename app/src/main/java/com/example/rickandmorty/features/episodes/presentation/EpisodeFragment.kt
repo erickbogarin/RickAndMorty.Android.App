@@ -52,13 +52,17 @@ class EpisodeFragment : BaseMvvmFragment() {
         vm.endOfList.observe(viewLifecycleOwner) { endOfList ->
             if (endOfList) {
                 Log.d("EpisodeFragment", "End of list reached")
-                // Show a message to the user
+                episodeAdapter.addEndOfListView()
             }
         }
     }
 
     private fun setupRecyclerView() {
-        episodeAdapter = EpisodeAdapter(requireContext())
+        episodeAdapter = EpisodeAdapter(requireContext()).apply {
+            onScrollToTopClick = {
+                binding.recyclerViewEpisodes.smoothScrollToPosition(0)
+            }
+        }
         binding.recyclerViewEpisodes.apply {
             adapter = episodeAdapter
             layoutManager = LinearLayoutManager(requireContext())

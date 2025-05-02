@@ -5,11 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rickandmorty.commons.base_ui.BaseViewModel
+import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.character.data.model.Character
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
-import com.example.rickandmorty.features.episodes.data.repository.EndOfListException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -19,10 +19,7 @@ class CharacterViewModel @Inject constructor(
 ) : BaseViewModel(), PaginationCallback {
 
     val characters = MutableLiveData<List<Character>>()
-
     val paginationState = PaginationState()
-
-    val currentPage: LiveData<Int> get() = paginationState.currentPage
     val isLastPage: LiveData<Boolean> get() = paginationState.isLastPage
     val endOfList: LiveData<Boolean> get() = paginationState.endOfList
 

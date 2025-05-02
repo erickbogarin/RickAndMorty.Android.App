@@ -13,7 +13,10 @@ import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 sealed class ListItem {
     data class EpisodeItem(val episode: EpisodeModel) : ListItem()
     object LoadingItem : ListItem()
+    data object EndOfListItem : ListItem()
 }
+
+var onScrollToTopClick: (() -> Unit)? = null
 
 class EpisodeAdapter(
     private val context: Context,
@@ -22,6 +25,7 @@ class EpisodeAdapter(
     private val itemSet: MutableSet<ListItem> = mutableSetOf()
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_LOADING = 1
+    private val VIEW_TYPE_END_OF_LIST = 2
 
     inner class CardViewHolder(private val binding: ItemEpisodeBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(episode: EpisodeModel) {
@@ -33,13 +37,28 @@ class EpisodeAdapter(
 
     inner class LoadingViewHolder(binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
 
+    inner class EndOfListViewHolder(binding: ItemEndOfListBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.endOfListContainer.setOnClickListener {
+                onScrollToTopClick?.invoke()
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == VIEW_TYPE_ITEM) {
-            val binding = ItemEpisodeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            CardViewHolder(binding)
-        } else {
-            val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            LoadingViewHolder(binding)
+        return when (viewType) {
+            VIEW_TYPE_ITEM -> {
+                val binding = ItemEpisodeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                CardViewHolder(binding)
+            }
+            VIEW_TYPE_LOADING -> {
+                val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                LoadingViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemEndOfListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                EndOfListViewHolder(binding)
+            }
         }
     }
 
@@ -51,6 +70,7 @@ class EpisodeAdapter(
         return when (itemSet.elementAt(position)) {
             is ListItem.EpisodeItem -> VIEW_TYPE_ITEM
             is ListItem.LoadingItem -> VIEW_TYPE_LOADING
+            is ListItem.EndOfListItem -> VIEW_TYPE_END_OF_LIST
         }
     }
 
@@ -79,5 +99,16 @@ class EpisodeAdapter(
             itemSet.remove(itemSet.last())
             notifyItemRemoved(itemSet.size)
         }
+    }
+
+    fun addEndOfListView() {
+        removeLoadingView()
+
+        if (itemSet.lastOrNull() is ListItem.EndOfListItem) {
+            return
+        }
+
+        itemSet.add(ListItem.EndOfListItem)
+        notifyItemInserted(itemSet.size - 1)
     }
 }

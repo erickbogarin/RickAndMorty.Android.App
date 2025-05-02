@@ -13,6 +13,8 @@ import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentCharacterBinding
 import kotlinx.coroutines.*
 
+var onScrollToTopClick: (() -> Unit)? = null
+
 class CharacterFragment : BaseMvvmFragment() {
 
     private var vm by appViewModel<CharacterViewModel>()
@@ -41,7 +43,11 @@ class CharacterFragment : BaseMvvmFragment() {
     }
 
     private fun setupRecyclerView() {
-        characterAdapter = CharacterAdapter(requireContext())
+        characterAdapter = CharacterAdapter(requireContext()).apply {
+            onScrollToTopClick = {
+                binding.characterList.smoothScrollToPosition(0)
+            }
+        }
         binding.characterList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = characterAdapter
@@ -74,7 +80,7 @@ class CharacterFragment : BaseMvvmFragment() {
         vm.endOfList.observe(viewLifecycleOwner) { endOfList ->
             if (endOfList) {
                 Log.d("CharacterFragment", "End of list reached")
-                // Show a message to the user
+                characterAdapter.addEndOfListView()
             }
         }
     }

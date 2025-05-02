@@ -2,4 +2,6 @@
     <string name="app_name">rickandmorty</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello empty fragment</string>
+    <string name="end_of_list_reached">End of list reached</string>
+    <string name="back_to_top">Back to top</string>
 </resources>

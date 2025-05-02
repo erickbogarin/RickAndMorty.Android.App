@@ -1,5 +1,7 @@
 package com.example.rickandmorty.features.episodes.data.repository
 
+import com.example.rickandmorty.commons.exceptions.EndOfListException
+import com.example.rickandmorty.commons.exceptions.ErrorResponse
 import com.example.rickandmorty.features.episodes.data.datasource.EpisodeRemoteDataSource
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 import com.example.rickandmorty.features.episodes.data.model.EpisodesResponse
@@ -11,10 +13,6 @@ import javax.inject.Inject
 interface EpisodeRepository {
     fun getAllEpisodes(page: Int): Single<List<EpisodeModel>>
 }
-
-class EndOfListException : RuntimeException()
-
-data class ErrorResponse(val error: String)
 
 class EpisodeRepositoryImpl @Inject constructor(
     private val remoteDataSource: EpisodeRemoteDataSource

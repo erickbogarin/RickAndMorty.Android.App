@@ -5,10 +5,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rickandmorty.commons.base_ui.BaseViewModel
+import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
-import com.example.rickandmorty.features.episodes.data.repository.EndOfListException
 import com.example.rickandmorty.features.episodes.domain.GetEpisodesUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,13 +19,7 @@ class EpisodeViewModel @Inject constructor(
 ) : BaseViewModel(), PaginationCallback {
 
     val episodes = MutableLiveData<List<EpisodeModel>>()
-
-    // Pagination component
     val paginationState = PaginationState()
-
-    // Expose pagination state properties directly for easy access
-    val currentPage: LiveData<Int> get() = paginationState.currentPage
-    val isLastPage: LiveData<Boolean> get() = paginationState.isLastPage
     val endOfList: LiveData<Boolean> get() = paginationState.endOfList
 
     @SuppressLint("CheckResult")

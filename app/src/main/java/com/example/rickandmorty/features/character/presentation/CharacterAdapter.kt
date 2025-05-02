@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.commons.utils.pagination.PaginationAdapter
 import com.example.rickandmorty.databinding.ItemCardViewBinding
+import com.example.rickandmorty.databinding.ItemEndOfListBinding
 import com.example.rickandmorty.databinding.ItemLoadingBinding
 import com.example.rickandmorty.features.character.data.model.Character
 import com.squareup.picasso.Picasso
@@ -13,6 +14,7 @@ import com.squareup.picasso.Picasso
 sealed class ListItem {
     data class CharacterItem(val character: Character) : ListItem()
     object LoadingItem : ListItem()
+    data object EndOfListItem : ListItem()
 }
 
 class CharacterAdapter(
@@ -22,6 +24,7 @@ class CharacterAdapter(
     private val itemSet: MutableSet<ListItem> = mutableSetOf()
     private val VIEW_TYPE_ITEM = 0
     private val VIEW_TYPE_LOADING = 1
+    private val VIEW_TYPE_END_OF_LIST = 2
 
     inner class CardViewHolder(private val binding: ItemCardViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(character: Character) {
@@ -33,6 +36,14 @@ class CharacterAdapter(
     }
 
     inner class LoadingViewHolder(binding: ItemLoadingBinding) : RecyclerView.ViewHolder(binding.root)
+
+    inner class EndOfListViewHolder(binding: ItemEndOfListBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.endOfListContainer.setOnClickListener {
+                onScrollToTopClick?.invoke()
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_TYPE_ITEM) {
@@ -59,6 +70,7 @@ class CharacterAdapter(
         return when (itemSet.elementAt(position)) {
             is ListItem.CharacterItem -> VIEW_TYPE_ITEM
             is ListItem.LoadingItem -> VIEW_TYPE_LOADING
+            is ListItem.EndOfListItem -> VIEW_TYPE_END_OF_LIST
         }
     }
 
@@ -80,5 +92,16 @@ class CharacterAdapter(
             itemSet.remove(itemSet.last())
             notifyItemRemoved(itemSet.size)
         }
+    }
+
+    fun addEndOfListView() {
+        removeLoadingView()
+
+        if (itemSet.lastOrNull() is ListItem.EndOfListItem) {
+            return
+        }
+
+        itemSet.add(ListItem.EndOfListItem)
+        notifyItemInserted(itemSet.size - 1)
     }
 }
