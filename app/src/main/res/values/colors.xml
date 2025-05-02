@@ -1,0 +1,22 @@
+<resources>
+    <!-- Cores principais -->
+    <color name="colorPrimary">#00FFFF</color> <!-- Azul Neon -->
+    <color name="colorPrimaryDark">#00B0B9</color> <!-- Azul Escuro -->
+    <color name="colorAccent">#A8FF00</color> <!-- Verde Limão -->
+
+    <!-- Cores adicionais -->
+    <color name="colorBackground">#FFFFFF</color> <!-- Fundo claro -->
+    <color name="colorTextPrimary">#000000</color> <!-- Texto primário preto -->
+    <color name="colorTextSecondary">#757575</color> <!-- Texto secundário cinza -->
+    <color name="colorButton">#FF6A13</color> <!-- Laranja vibrante -->
+    <color name="colorHighlight">#1DC6FF</color> <!-- Azul Turquesa -->
+
+    <!-- Cor para elementos de superfície -->
+    <color name="colorSurface">#F5F5F5</color> <!-- Superfície clara -->
+
+    <!-- Cor de erro -->
+    <color name="colorError">#D32F2F</color> <!-- Vermelho de erro -->
+
+    <!-- Cor Secundária -->
+    <color name="colorSecondary">#FF4081</color> <!-- Rosa vibrante -->
+</resources>

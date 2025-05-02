@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mi_character"
+        android:enabled="true"
+        android:title="Characters"
+        android:icon="@drawable/ic_home"
+        />
+    <item
+        android:id="@+id/mi_episode"
+        android:enabled="true"
+        android:title="Episodes"
+        android:icon="@drawable/ic_dataset"
+        />
+    <item
+        android:id="@+id/mi_location"
+        android:enabled="true"
+        android:title="Places"
+        android:icon="@drawable/ic_location"
+        />
+</menu>

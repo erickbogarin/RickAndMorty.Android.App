@@ -1,0 +1,64 @@
+# Diretórios do Android Studio
+.idea/
+.gradle/
+local.properties
+
+# Build outputs
+/build/
+*/build/
+
+# Arquivos de log e cache
+*.log
+.cxx/
+captures/
+.externalNativeBuild/
+*.hprof
+
+# Arquivos gerados
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.so
+*.pb
+
+# Arquivos temporários e de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos do sistema operacional
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# Arquivos de backup
+*.swp
+*.swo
+*~
+*.tmp
+
+# Arquivos de configuração do Android Studio
+*.iml
+
+# Google Services
+google-services.json
+fabric.properties
+crashlytics-build.properties
+
+# Keystore
+*.jks
+*.keystore
+
+# Firebase Crashlytics
+firebase-debug.log
+
+# Kotlin specific
+*.kotlin_module
+
+# Arquivos de ambiente
+.env
+*.env
+
+# Outras IDEs
+.vscode/
