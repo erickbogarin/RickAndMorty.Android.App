@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
+import com.example.rickandmorty.commons.utils.enableScrollToTop
 import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentEpisodeBinding
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,7 @@ class EpisodeFragment : BaseMvvmFragment() {
     private fun setupObservers() {
         vm.episodes.observe(viewLifecycleOwner) { episodes ->
             episodeAdapter.removeLoadingView()
-            episodeAdapter.addEpisodes(episodes)
+            episodeAdapter.addItems(episodes.map { ListItem.EpisodeItem(it) })
             binding.recyclerViewEpisodes.scrollToPosition(episodeAdapter.itemCount - episodes.size)
         }
 

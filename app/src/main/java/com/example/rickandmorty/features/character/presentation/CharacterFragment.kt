@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
 import com.example.rickandmorty.commons.base_ui.SafeObserver
+import com.example.rickandmorty.commons.utils.enableScrollToTop
 import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentCharacterBinding
+import com.example.rickandmorty.features.character.data.model.Character
 import kotlinx.coroutines.*
 
 var onScrollToTopClick: (() -> Unit)? = null
@@ -45,7 +47,7 @@ class CharacterFragment : BaseMvvmFragment() {
     private fun setupRecyclerView() {
         characterAdapter = CharacterAdapter(requireContext()).apply {
             onScrollToTopClick = {
-                binding.characterList.smoothScrollToPosition(0)
+                binding.characterList.smoothScrollToPosition(0) // Faz scroll para o topo
             }
         }
         binding.characterList.apply {
@@ -69,7 +71,7 @@ class CharacterFragment : BaseMvvmFragment() {
     private fun setupObservers() {
         vm.characters.observe(viewLifecycleOwner, SafeObserver { items ->
             characterAdapter.removeLoadingView()
-            characterAdapter.addCharacters(items)
+            characterAdapter.addItems(items.map { ListItem.CharacterItem(it) })
             binding.characterList.scrollToPosition(characterAdapter.itemCount - items.size)
         })
         vm.isLastPage.observe(viewLifecycleOwner) { isLastPage ->
