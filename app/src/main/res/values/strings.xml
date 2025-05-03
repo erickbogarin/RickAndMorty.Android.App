@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">rickandmorty</string>
+    <string name="app_name">Rick And Morty</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello empty fragment</string>
     <string name="end_of_list_reached">End of list reached</string>

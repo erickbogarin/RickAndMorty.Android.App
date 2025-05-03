@@ -1,22 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Cores principais -->
-    <color name="colorPrimary">#00FFFF</color> <!-- Azul Neon -->
-    <color name="colorPrimaryDark">#00B0B9</color> <!-- Azul Escuro -->
-    <color name="colorAccent">#A8FF00</color> <!-- Verde Limão -->
+    <color name="colorPrimary">#7ED321</color> <!-- Verde médio mais escuro que o anterior -->
+    <color name="colorPrimaryDark">#5CA119</color> <!-- Verde escuro para barra de status -->
+    <color name="colorAccent">#7ED321</color> <!-- Mantendo igual ao colorPrimary -->
+    <color name="colorSecondary">#0F1C32</color> <!-- Azul escuro mais profundo -->
 
-    <!-- Cores adicionais -->
-    <color name="colorBackground">#FFFFFF</color> <!-- Fundo claro -->
-    <color name="colorTextPrimary">#000000</color> <!-- Texto primário preto -->
-    <color name="colorTextSecondary">#757575</color> <!-- Texto secundário cinza -->
-    <color name="colorButton">#FF6A13</color> <!-- Laranja vibrante -->
-    <color name="colorHighlight">#1DC6FF</color> <!-- Azul Turquesa -->
+    <!-- Cores de background -->
+    <color name="colorBackground">#E4E9F0</color> <!-- Background mais escuro que o anterior -->
+    <color name="colorSurface">#F5F7FA</color> <!-- Superfície para cards levemente acinzentada -->
 
-    <!-- Cor para elementos de superfície -->
-    <color name="colorSurface">#F5F5F5</color> <!-- Superfície clara -->
+    <!-- Cores de texto -->
+    <color name="colorTextPrimary">#121212</color> <!-- Texto principal quase preto -->
+    <color name="colorTextSecondary">#505050</color> <!-- Texto secundário cinza mais escuro -->
+    <color name="colorTextOnDark">#F8F8FF</color> <!-- Texto sobre fundos escuros -->
+
+    <!-- Cores para botões e destaques -->
+    <color name="colorButton">#7ED321</color> <!-- Verde médio para botões -->
+    <color name="colorHighlight">#0F1C32</color> <!-- Azul escuro para destaques -->
 
     <!-- Cor de erro -->
-    <color name="colorError">#D32F2F</color> <!-- Vermelho de erro -->
+    <color name="colorError">#E53935</color> <!-- Vermelho de erro mais profundo -->
 
-    <!-- Cor Secundária -->
-    <color name="colorSecondary">#FF4081</color> <!-- Rosa vibrante -->
+    <!-- Cores adicionais para melhorar a paleta -->
+    <color name="colorDivider">#D8DDE6</color> <!-- Cor para divisores e bordas -->
+    <color name="colorInactive">#A0A9B8</color> <!-- Cor para elementos inativos ou desativados -->
+    <color name="colorOverlay">#80000000</color> <!-- Overlay semitransparente (50%) para modais -->
 </resources>
