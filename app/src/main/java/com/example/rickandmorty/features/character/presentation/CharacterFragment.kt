@@ -15,8 +15,6 @@ import com.example.rickandmorty.databinding.FragmentCharacterBinding
 import com.example.rickandmorty.features.character.data.model.Character
 import kotlinx.coroutines.*
 
-var onScrollToTopClick: (() -> Unit)? = null
-
 class CharacterFragment : BaseMvvmFragment() {
 
     private var vm by appViewModel<CharacterViewModel>()

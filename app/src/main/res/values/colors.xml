@@ -1,29 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Cores principais -->
-    <color name="colorPrimary">#7ED321</color> <!-- Verde médio mais escuro que o anterior -->
-    <color name="colorPrimaryDark">#5CA119</color> <!-- Verde escuro para barra de status -->
-    <color name="colorAccent">#7ED321</color> <!-- Mantendo igual ao colorPrimary -->
-    <color name="colorSecondary">#0F1C32</color> <!-- Azul escuro mais profundo -->
+    <color name="colorPrimary">#3AB6D9</color>         <!-- Azul ciano suave -->
+    <color name="colorPrimaryDark">#152535</color>     <!-- Azul grafite mais neutro -->
+    <color name="colorAccent">#A48FFF</color>          <!-- Lilás moderno e mais leve -->
+    <color name="colorSecondary">#2C445E</color>       <!-- Azul acinzentado -->
 
     <!-- Cores de background -->
-    <color name="colorBackground">#E4E9F0</color> <!-- Background mais escuro que o anterior -->
-    <color name="colorSurface">#F5F7FA</color> <!-- Superfície para cards levemente acinzentada -->
+    <color name="colorBackground">#F2F5F9</color>      <!-- Fundo claro e frio -->
+    <color name="colorSurface">#FFFFFF</color>         <!-- Superfície para cards -->
 
     <!-- Cores de texto -->
-    <color name="colorTextPrimary">#121212</color> <!-- Texto principal quase preto -->
-    <color name="colorTextSecondary">#505050</color> <!-- Texto secundário cinza mais escuro -->
-    <color name="colorTextOnDark">#F8F8FF</color> <!-- Texto sobre fundos escuros -->
+    <color name="colorTextPrimary">#1C1C1E</color>     <!-- Preto quase puro -->
+    <color name="colorTextSecondary">#4C5B68</color>   <!-- Cinza azulado -->
+    <color name="colorTextOnDark">#F8F8FF</color>      <!-- Texto sobre planos escuros -->
 
     <!-- Cores para botões e destaques -->
-    <color name="colorButton">#7ED321</color> <!-- Verde médio para botões -->
-    <color name="colorHighlight">#0F1C32</color> <!-- Azul escuro para destaques -->
+    <color name="colorButton">#3AB6D9</color>          <!-- Azul ciano suave -->
+    <color name="colorHighlight">#A48FFF</color>       <!-- Lilás como destaque -->
 
     <!-- Cor de erro -->
-    <color name="colorError">#E53935</color> <!-- Vermelho de erro mais profundo -->
+    <color name="colorError">#FF4F4F</color>           <!-- Vermelho moderno -->
 
-    <!-- Cores adicionais para melhorar a paleta -->
-    <color name="colorDivider">#D8DDE6</color> <!-- Cor para divisores e bordas -->
-    <color name="colorInactive">#A0A9B8</color> <!-- Cor para elementos inativos ou desativados -->
-    <color name="colorOverlay">#80000000</color> <!-- Overlay semitransparente (50%) para modais -->
+    <!-- Cores adicionais -->
+    <color name="colorDivider">#DCE3EB</color>         <!-- Divisores sutis -->
+    <color name="colorInactive">#A0A9B8</color>        <!-- Elementos desativados -->
+    <color name="colorOverlay">#80000000</color>       <!-- Overlay -->
 </resources>
