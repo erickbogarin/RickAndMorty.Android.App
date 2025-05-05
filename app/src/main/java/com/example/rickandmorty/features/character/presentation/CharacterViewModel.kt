@@ -10,18 +10,21 @@ import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.character.data.model.Character
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
+import com.example.rickandmorty.features.character.domain.ManageFavoriteCharacterUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val manageFavoriteCharacterUseCase: ManageFavoriteCharacterUseCase
 ) : BaseViewModel(), PaginationCallback {
 
     val characters = MutableLiveData<List<Character>>()
     val paginationState = PaginationState()
     val isLastPage: LiveData<Boolean> get() = paginationState.isLastPage
     val endOfList: LiveData<Boolean> get() = paginationState.endOfList
+    val favoriteStatus = MutableLiveData<Pair<Character, Boolean>>()
 
     @SuppressLint("CheckResult")
     override fun onLoadMore() {
@@ -43,9 +46,18 @@ class CharacterViewModel @Inject constructor(
                     if (error is EndOfListException) {
                         paginationState.markAsLastPage()
                     } else {
-                        Log.e("Episodes", error.message.orEmpty())
+                        Log.e("CharacterViewModel", error.message.orEmpty())
                     }
                 }
             )
+    }
+
+    fun toggleFavorite(character: Character) {
+        val isFavorite = manageFavoriteCharacterUseCase.toggleFavorite(character)
+        favoriteStatus.value = character to isFavorite
+    }
+
+    fun isFavorite(character: Character): Boolean {
+        return manageFavoriteCharacterUseCase.isFavorite(character)
     }
 }

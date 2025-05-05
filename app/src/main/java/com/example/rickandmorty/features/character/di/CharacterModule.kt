@@ -5,6 +5,8 @@ import com.example.rickandmorty.config.ViewModelKey
 import com.example.rickandmorty.features.character.data.CharacterApiService
 import com.example.rickandmorty.features.character.data.CharacterRepository
 import com.example.rickandmorty.features.character.data.CharacterRepositoryImpl
+import com.example.rickandmorty.features.character.data.FavoriteCharacterRepository
+import com.example.rickandmorty.features.character.data.FavoriteCharacterRepositoryImpl
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCaseImpl
 import com.example.rickandmorty.features.character.presentation.CharacterFragment
@@ -43,6 +45,12 @@ abstract class CharacterModule {
     @Binds
     @Singleton
     abstract fun provideCharacterRepository(repository: CharacterRepositoryImpl): CharacterRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideFavoriteCharacterRepository(
+        repository: FavoriteCharacterRepositoryImpl
+    ): FavoriteCharacterRepository
 
     @Module
     companion object {

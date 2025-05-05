@@ -20,7 +20,6 @@ class CharacterFragment : BaseMvvmFragment() {
     private var vm by appViewModel<CharacterViewModel>()
     private lateinit var binding: FragmentCharacterBinding
     private lateinit var characterAdapter: CharacterAdapter
-    private lateinit var paginationHandler: PaginationHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,9 +32,8 @@ class CharacterFragment : BaseMvvmFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        setupPagination()
-        fetchCharacters()
         setupObservers()
+        fetchCharacters()
     }
 
     private fun fetchCharacters() {
@@ -43,51 +41,34 @@ class CharacterFragment : BaseMvvmFragment() {
     }
 
     private fun setupRecyclerView() {
-        characterAdapter = CharacterAdapter(requireContext()).apply {
-            onScrollToTopClick = {
-                binding.characterList.smoothScrollToPosition(0) // Faz scroll para o topo
+        characterAdapter = CharacterAdapter(
+            context = requireContext(),
+            onFavoriteClick = { character ->
+                vm.toggleFavorite(character) // Atualiza o estado de favorito na ViewModel
+            },
+            isFavorite = { character ->
+                vm.isFavorite(character) // Verifica se o personagem é favorito
             }
-        }
+        )
         binding.characterList.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = characterAdapter
         }
     }
 
-    private fun setupPagination() {
-        paginationHandler = PaginationHandler(
-            recyclerView = binding.characterList,
-            paginationState = vm.paginationState,
-            adapter = characterAdapter,
-            callback = vm,
-            tag = "CharacterFragment"
-        )
-        paginationHandler.attach()
-    }
-
-
     private fun setupObservers() {
         vm.characters.observe(viewLifecycleOwner, SafeObserver { items ->
             characterAdapter.removeLoadingView()
             characterAdapter.addItems(items.map { ListItem.CharacterItem(it) })
-            binding.characterList.scrollToPosition(characterAdapter.itemCount - items.size)
         })
-        vm.isLastPage.observe(viewLifecycleOwner) { isLastPage ->
-            if (isLastPage) {
-                Log.d("CharacterFragment", "End of list reached")
-            }
-        }
-        vm.endOfList.observe(viewLifecycleOwner) { endOfList ->
-            if (endOfList) {
-                Log.d("CharacterFragment", "End of list reached")
-                characterAdapter.addEndOfListView()
-            }
+
+        vm.favoriteStatus.observe(viewLifecycleOwner) { (character, isFavorite) ->
+            characterAdapter.notifyDataSetChanged() // Atualiza a lista quando o estado de favorito muda
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        paginationHandler.detach()
     }
 
     companion object {

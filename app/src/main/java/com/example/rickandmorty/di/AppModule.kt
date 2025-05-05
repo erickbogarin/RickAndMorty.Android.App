@@ -1,8 +1,11 @@
 package com.example.rickandmorty.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.rickandmorty.MainActivity
+import com.example.rickandmorty.MyApplication
 import com.example.rickandmorty.features.character.di.CharacterModuleBuilder
 import com.example.rickandmorty.features.episodes.di.EpisodeModuleBuilder
 import com.example.rickandmorty.features.location.di.LocationModuleBuilder
