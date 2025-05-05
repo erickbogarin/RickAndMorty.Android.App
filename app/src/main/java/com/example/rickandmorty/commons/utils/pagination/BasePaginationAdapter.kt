@@ -44,6 +44,8 @@ abstract class BasePaginationAdapter<T, VH : RecyclerView.ViewHolder>(
 
     override fun getItemCount(): Int = itemSet.size
 
+    fun getCurrentItems(): List<T> = itemSet.toList()
+
     override fun getItemViewType(position: Int): Int {
         return when (itemSet.elementAt(position)) {
             is LoadingItem -> viewTypeLoading

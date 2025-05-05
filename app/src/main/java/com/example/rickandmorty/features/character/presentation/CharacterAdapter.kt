@@ -43,6 +43,11 @@ class CharacterAdapter(
         }
     }
 
+    fun updateCharacter(character: Character) {
+        val index = getCurrentItems().indexOfFirst { it.character.id == character.id }
+        if (index != -1) notifyItemChanged(index)
+    }
+
     override fun onCreateItemViewHolder(parent: ViewGroup): CardViewHolder {
         val binding = ItemCardViewBinding.inflate(LayoutInflater.from(context), parent, false)
         return CardViewHolder(binding)
