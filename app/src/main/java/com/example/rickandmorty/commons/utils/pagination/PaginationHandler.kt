@@ -78,7 +78,6 @@ class PaginationHandler(
 
     private fun loadMoreItems() {
         adapter.addLoadingView()
-        paginationState.incrementCurrentPage()
         callback.onLoadMore()
         Log.d(tag, "Loading more items for page ${paginationState.currentPage.value}")
     }
@@ -87,6 +86,7 @@ class PaginationHandler(
      * Attach the scroll listener to the RecyclerView
      */
     fun attach() {
+        recyclerView.clearOnScrollListeners()
         recyclerView.addOnScrollListener(scrollListener)
     }
 
@@ -95,7 +95,7 @@ class PaginationHandler(
      * Should be called in onDestroyView to prevent memory leaks
      */
     fun detach() {
-        recyclerView.removeOnScrollListener(scrollListener)
+        recyclerView.clearOnScrollListeners()
         debounceJob?.cancel()
     }
 }

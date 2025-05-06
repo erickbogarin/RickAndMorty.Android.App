@@ -23,7 +23,6 @@ class CharacterViewModel @Inject constructor(
 ) : BaseViewModel(), PaginationCallback {
 
     private val _allCharacters = MutableLiveData<List<Character>>(emptyList())
-    val allCharacters: LiveData<List<Character>> = _allCharacters
 
     private val _showOnlyFavorites = MutableLiveData<Boolean>(false)
     val showOnlyFavorites: LiveData<Boolean> = _showOnlyFavorites
@@ -51,6 +50,7 @@ class CharacterViewModel @Inject constructor(
             .subscribe(
                 { newCharacters ->
                     _allCharacters.value = _allCharacters.value.orEmpty() + newCharacters
+                    paginationState.incrementCurrentPage()
                 },
                 { error ->
                     if (error is EndOfListException) {
