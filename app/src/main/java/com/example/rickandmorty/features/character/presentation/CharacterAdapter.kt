@@ -48,6 +48,13 @@ class CharacterAdapter(
         if (index != -1) notifyItemChanged(index)
     }
 
+
+    fun clear() {
+        val itemCount = itemCount
+        clearItems()
+        notifyItemRangeRemoved(0, itemCount)
+    }
+
     override fun onCreateItemViewHolder(parent: ViewGroup): CardViewHolder {
         val binding = ItemCardViewBinding.inflate(LayoutInflater.from(context), parent, false)
         return CardViewHolder(binding)

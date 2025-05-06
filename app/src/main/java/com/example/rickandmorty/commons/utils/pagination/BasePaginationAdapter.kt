@@ -84,6 +84,11 @@ abstract class BasePaginationAdapter<T, VH : RecyclerView.ViewHolder>(
         }
     }
 
+    fun clearItems() {
+        itemSet.clear() // Limpa todos os itens do conjunto
+        notifyDataSetChanged() // Atualiza a interface do RecyclerView
+    }
+
     private fun createLoadingViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return object : RecyclerView.ViewHolder(binding.root) {}

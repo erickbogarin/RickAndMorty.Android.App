@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
 import com.example.rickandmorty.commons.base_ui.BaseViewModel
 import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
@@ -20,27 +22,35 @@ class CharacterViewModel @Inject constructor(
     private val manageFavoriteCharacterUseCase: ManageFavoriteCharacterUseCase
 ) : BaseViewModel(), PaginationCallback {
 
-    val characters = MutableLiveData<List<Character>>()
+    private val _allCharacters = MutableLiveData<List<Character>>(emptyList())
+    val allCharacters: LiveData<List<Character>> = _allCharacters
+
+    private val _showOnlyFavorites = MutableLiveData<Boolean>(false)
+    val showOnlyFavorites: LiveData<Boolean> = _showOnlyFavorites
+
+    val characters: LiveData<List<Character>> = _allCharacters.switchMap { allCharacters ->
+        _showOnlyFavorites.map { showOnlyFavorites ->
+            if (showOnlyFavorites) {
+                allCharacters.filter { isFavorite(it) }
+            } else {
+                allCharacters
+            }
+        }
+    }
+
     val paginationState = PaginationState()
-    val isLastPage: LiveData<Boolean> get() = paginationState.isLastPage
-    val endOfList: LiveData<Boolean> get() = paginationState.endOfList
     val favoriteStatus = MutableLiveData<Pair<Character, Boolean>>()
 
     @SuppressLint("CheckResult")
     override fun onLoadMore() {
-        getCharacters()
-    }
-
-    @SuppressLint("CheckResult")
-    fun getCharacters() {
-        if (paginationState.isLastPage.value == true) return
+        if (_showOnlyFavorites.value == true || paginationState.isLastPage.value == true) return
 
         getCharactersUseCase.execute(paginationState.currentPage.value ?: 1)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { newCharacters ->
-                    characters.value = characters.value.orEmpty() + newCharacters
+                    _allCharacters.value = _allCharacters.value.orEmpty() + newCharacters
                 },
                 { error ->
                     if (error is EndOfListException) {
@@ -55,9 +65,21 @@ class CharacterViewModel @Inject constructor(
     fun toggleFavorite(character: Character) {
         val isFavorite = manageFavoriteCharacterUseCase.toggleFavorite(character)
         favoriteStatus.value = character to isFavorite
+
+        if (_showOnlyFavorites.value == true) {
+            refreshCharacterList()
+        }
     }
 
     fun isFavorite(character: Character): Boolean {
         return manageFavoriteCharacterUseCase.isFavorite(character)
+    }
+
+    fun setShowOnlyFavorites(showOnlyFavorites: Boolean) {
+        _showOnlyFavorites.value = showOnlyFavorites
+    }
+
+    private fun refreshCharacterList() {
+        _allCharacters.value = _allCharacters.value
     }
 }

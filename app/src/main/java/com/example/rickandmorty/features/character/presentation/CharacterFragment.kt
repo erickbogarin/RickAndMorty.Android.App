@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
 import com.example.rickandmorty.commons.base_ui.SafeObserver
+import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentCharacterBinding
 
 class CharacterFragment : BaseMvvmFragment() {
@@ -14,6 +15,7 @@ class CharacterFragment : BaseMvvmFragment() {
     private var vm by appViewModel<CharacterViewModel>()
     private lateinit var binding: FragmentCharacterBinding
     private lateinit var characterAdapter: CharacterAdapter
+    private lateinit var paginationHandler: PaginationHandler
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,12 +28,14 @@ class CharacterFragment : BaseMvvmFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupPagination()
+        setupFilterChips()
         setupObservers()
         fetchCharacters()
     }
 
     private fun fetchCharacters() {
-        vm.getCharacters()
+        vm.onLoadMore()
     }
 
     private fun setupRecyclerView() {
@@ -44,20 +48,58 @@ class CharacterFragment : BaseMvvmFragment() {
                 vm.isFavorite(character)
             }
         )
+
         binding.characterList.apply {
-            layoutManager = LinearLayoutManager(context)
             adapter = characterAdapter
+            layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
+    private fun setupFilterChips() {
+        binding.chipAll.setOnClickListener {
+            vm.setShowOnlyFavorites(false)
+        }
+
+        binding.chipFavorites.setOnClickListener {
+            vm.setShowOnlyFavorites(true)
+        }
+
+        binding.chipAll.isChecked = true
+    }
+
+    private fun setupPagination() {
+        paginationHandler = PaginationHandler(
+            recyclerView = binding.characterList,
+            paginationState = vm.paginationState,
+            adapter = characterAdapter,
+            callback = vm,
+            tag = "CharacterFragment"
+        )
+
+        paginationHandler.attach()
+    }
+
     private fun setupObservers() {
-        vm.characters.observe(viewLifecycleOwner, SafeObserver { items ->
+        vm.characters.observe(viewLifecycleOwner, SafeObserver { characters ->
             characterAdapter.removeLoadingView()
-            characterAdapter.addItems(items.map { ListItem.CharacterItem(it) })
+            characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
+            binding.characterList.scrollToPosition(characterAdapter.itemCount - characters.size)
         })
 
-        vm.favoriteStatus.observe(viewLifecycleOwner) { (character) ->
-           characterAdapter.updateCharacter(character)
+        vm.favoriteStatus.observe(viewLifecycleOwner) { (character, _) ->
+            characterAdapter.updateCharacter(character)
+        }
+
+        vm.showOnlyFavorites.observe(viewLifecycleOwner) { showOnlyFavorites ->
+            characterAdapter.clear()
+            binding.chipFavorites.isChecked = showOnlyFavorites
+            binding.chipAll.isChecked = !showOnlyFavorites
+
+            if (showOnlyFavorites) {
+                paginationHandler.detach()
+            } else {
+                paginationHandler.attach()
+            }
         }
     }
 
