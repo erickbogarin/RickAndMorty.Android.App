@@ -20,7 +20,10 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '11'
-        distribution: 'temurin'  # Add this line to specify the Java distribution
+        distribution: 'temurin'
+
+    - name: Set Gradle Wrapper as Executable
+      run: chmod +x ./gradlew  # Add this step to fix the permission issue
 
     - name: Install dependencies
       run: ./gradlew dependencies
