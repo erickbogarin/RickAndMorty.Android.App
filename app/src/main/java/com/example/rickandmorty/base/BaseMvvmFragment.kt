@@ -1,4 +1,4 @@
-package com.example.rickandmorty.commons.base_ui
+package com.example.rickandmorty.base
 
 import com.example.rickandmorty.di.ViewModelFactory
 

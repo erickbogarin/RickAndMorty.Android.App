@@ -1,87 +1,60 @@
 package com.example.rickandmorty.features.location.presentation
 
 import android.os.Bundle
-import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
-import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
-import com.example.rickandmorty.databinding.FragmentLocationBinding
+import com.example.rickandmorty.R
 
-class LocationFragment : BaseMvvmFragment() {
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-    private var vm by appViewModel<LocationViewModel>()
-    private lateinit var binding: FragmentLocationBinding
-    private lateinit var locationAdapter: LocationAdapter
-    private lateinit var paginationHandler: PaginationHandler
+/**
+ * A simple [Fragment] subclass.
+ * Use the [LocationFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class LocationFragment : Fragment() {
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentLocationBinding.inflate(inflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        setupPagination()
-        fetchLocations()
-        setupObservers()
-    }
-
-    private fun fetchLocations() {
-        vm.fetchLocations()
-    }
-
-    private fun setupRecyclerView() {
-        locationAdapter = LocationAdapter(requireContext()).apply {
-            onScrollToTopClick = {
-                binding.locationList.smoothScrollToPosition(0) // Faz scroll para o topo
-            }
-        }
-        binding.locationList.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = locationAdapter
-        }
-    }
-
-    private fun setupPagination() {
-        paginationHandler = PaginationHandler(
-            recyclerView = binding.locationList,
-            paginationState = vm.paginationState,
-            adapter = locationAdapter,
-            callback = vm,
-            tag = "LocationFragment"
-        )
-        paginationHandler.attach()
-    }
-
-    private fun setupObservers() {
-        vm.locations.observe(viewLifecycleOwner) { locations ->
-            locationAdapter.removeLoadingView()
-            locationAdapter.addItems(locations.map { ListItem.LocationItem(it) })
-            binding.locationList.scrollToPosition(locationAdapter.itemCount - locations.size)
-        }
-
-        vm.endOfList.observe(viewLifecycleOwner) { endOfList ->
-            if (endOfList) {
-                Log.d("LocationFragment", "End of list reached")
-                locationAdapter.addEndOfListView()
-            }
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        paginationHandler.detach()
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_location, container, false)
     }
 
     companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param param1 Parameter 1.
+         * @param param2 Parameter 2.
+         * @return A new instance of fragment LocationFragment.
+         */
+        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance() = LocationFragment()
+        fun newInstance(param1: String, param2: String) =
+            LocationFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_PARAM1, param1)
+                    putString(ARG_PARAM2, param2)
+                }
+            }
     }
 }

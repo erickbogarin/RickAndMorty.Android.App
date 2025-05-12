@@ -1,5 +1,6 @@
-package com.example.rickandmorty.commons.base_ui
+package com.example.rickandmorty.base
 
+import android.view.WindowManager
 import com.example.rickandmorty.di.ViewModelFactory
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject

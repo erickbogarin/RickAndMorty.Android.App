@@ -1,28 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Cores principais -->
-    <color name="colorPrimary">#3AB6D9</color>         <!-- Azul ciano suave -->
-    <color name="colorPrimaryDark">#152535</color>     <!-- Azul grafite mais neutro -->
-    <color name="colorAccent">#A48FFF</color>          <!-- Lilás moderno e mais leve -->
-    <color name="colorSecondary">#2C445E</color>       <!-- Azul acinzentado -->
-
-    <!-- Cores de background -->
-    <color name="colorBackground">#F2F5F9</color>      <!-- Fundo claro e frio -->
-    <color name="colorSurface">#FFFFFF</color>         <!-- Superfície para cards -->
-
-    <!-- Cores de texto -->
-    <color name="colorTextPrimary">#1C1C1E</color>     <!-- Preto quase puro -->
-    <color name="colorTextSecondary">#4C5B68</color>   <!-- Cinza azulado -->
-    <color name="colorTextOnDark">#F8F8FF</color>      <!-- Texto sobre planos escuros -->
-
-    <!-- Cores para botões e destaques -->
-    <color name="colorButton">#3AB6D9</color>          <!-- Azul ciano suave -->
-    <color name="colorHighlight">#A48FFF</color>       <!-- Lilás como destaque -->
-
-    <!-- Cor de erro -->
-    <color name="colorError">#FF4F4F</color>           <!-- Vermelho moderno -->
-
-    <!-- Cores adicionais -->
-    <color name="colorDivider">#DCE3EB</color>         <!-- Divisores sutis -->
-    <color name="colorInactive">#A0A9B8</color>        <!-- Elementos desativados -->
-    <color name="colorOverlay">#80000000</color>       <!-- Overlay -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
 </resources>

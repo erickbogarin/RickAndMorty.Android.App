@@ -8,18 +8,16 @@
     <fragment
         android:id="@+id/mi_character"
         android:name="com.example.rickandmorty.features.character.presentation.CharacterFragment"
-        android:label="Characters"
+        android:label="fragment_home"
         tools:layout="@layout/fragment_character" />
-
     <fragment
         android:id="@+id/mi_episode"
         android:name="com.example.rickandmorty.features.episodes.presentation.EpisodeFragment"
-        android:label="Episodes"
+        android:label="fragment_episode"
         tools:layout="@layout/fragment_episode" />
-
     <fragment
         android:id="@+id/mi_location"
         android:name="com.example.rickandmorty.features.location.presentation.LocationFragment"
-        android:label="Locations"
+        android:label="fragment_location"
         tools:layout="@layout/fragment_location" />
 </navigation>

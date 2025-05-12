@@ -1,11 +1,8 @@
 package com.example.rickandmorty.features.episodes.data.repository
 
-import com.example.rickandmorty.commons.exceptions.EndOfListException
-import com.example.rickandmorty.commons.exceptions.ErrorResponse
 import com.example.rickandmorty.features.episodes.data.datasource.EpisodeRemoteDataSource
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 import com.example.rickandmorty.features.episodes.data.model.EpisodesResponse
-import com.google.gson.Gson
 import io.reactivex.Single
 import retrofit2.Response
 import javax.inject.Inject
@@ -22,16 +19,10 @@ class EpisodeRepositoryImpl @Inject constructor(
 
         return response.map { response: Response<EpisodesResponse> ->
             if (response.isSuccessful) {
-                response.body()?.results ?: throw RuntimeException("Response body is null")
-            } else {
-                val errorBody = response.errorBody()?.string()
-                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                if (errorResponse.error == "There is nothing here") {
-                    throw EndOfListException()
-                } else {
-                    throw RuntimeException(errorBody)
-                }
+                return@map response.body()?.results ?: throw RuntimeException("Response body is null")
             }
+
+            throw RuntimeException(response.errorBody()?.string())
         }
     }
 }
