@@ -1,5 +1,15 @@
 <resources>
-    <string name="app_name">rickandmorty</string>
+    <string name="app_name">Rick And Morty</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello empty fragment</string>
+    <string name="end_of_list_reached">End of list reached</string>
+    <string name="back_to_top">Back to top</string>
+    <string name="location_action">See more</string>
+    <string name="location_type">Type: %1$s</string>
+    <string name="location_dimension">Dimension: %1$s</string>
+    <string name="character_species">Species:</string>
+    <string name="character_origin">Origin:</string>
+    <string name="character_favorite_button_text">Favorite button</string>
+    <string name="character_know_more_btn">Know more</string>
+    <string name="character_image_description">Character image</string>
 </resources>

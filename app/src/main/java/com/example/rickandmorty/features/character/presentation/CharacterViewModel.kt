@@ -4,37 +4,82 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.rickandmorty.base.BaseViewModel
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import com.example.rickandmorty.commons.base_ui.BaseViewModel
+import com.example.rickandmorty.commons.exceptions.EndOfListException
+import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
+import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.character.data.model.Character
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
+import com.example.rickandmorty.features.character.domain.ManageFavoriteCharacterUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
-    private val getCharactersUseCase: GetCharactersUseCase
-) : BaseViewModel() {
+    private val getCharactersUseCase: GetCharactersUseCase,
+    private val manageFavoriteCharacterUseCase: ManageFavoriteCharacterUseCase
+) : BaseViewModel(), PaginationCallback {
 
-    val characters = MutableLiveData<List<Character>>()
-    private val _currentPage = MutableLiveData(0)
-    val currentPage: LiveData<Int> get() = _currentPage
+    private val _allCharacters = MutableLiveData<List<Character>>(emptyList())
 
-    fun incrementCurrentPage() {
-        _currentPage.value = (_currentPage.value ?: 0) + 1
+    private val _showOnlyFavorites = MutableLiveData<Boolean>(false)
+    val showOnlyFavorites: LiveData<Boolean> = _showOnlyFavorites
+
+    val characters: LiveData<List<Character>> = _allCharacters.switchMap { allCharacters ->
+        _showOnlyFavorites.map { showOnlyFavorites ->
+            if (showOnlyFavorites) {
+                allCharacters.filter { isFavorite(it) }
+            } else {
+                allCharacters
+            }
+        }
     }
 
+    val paginationState = PaginationState()
+    val favoriteStatus = MutableLiveData<Pair<Character, Boolean>>()
+
     @SuppressLint("CheckResult")
-    fun getCharacters() {
-        getCharactersUseCase.execute(_currentPage.value ?: 1)
+    override fun onLoadMore() {
+        if (_showOnlyFavorites.value == true || paginationState.isLastPage.value == true) return
+
+        getCharactersUseCase.execute(paginationState.currentPage.value ?: 1)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { newCharacters ->
-                    characters.value = characters.value.orEmpty() + newCharacters
+                    _allCharacters.value = _allCharacters.value.orEmpty() + newCharacters
+                    paginationState.incrementCurrentPage()
                 },
                 { error ->
-                    Log.e("Characters", error.message.orEmpty())
+                    if (error is EndOfListException) {
+                        paginationState.markAsLastPage()
+                    } else {
+                        Log.e("CharacterViewModel", error.message.orEmpty())
+                    }
                 }
             )
+    }
+
+    fun toggleFavorite(character: Character) {
+        val isFavorite = manageFavoriteCharacterUseCase.toggleFavorite(character)
+        favoriteStatus.value = character to isFavorite
+
+        if (_showOnlyFavorites.value == true) {
+            refreshCharacterList()
+        }
+    }
+
+    fun isFavorite(character: Character): Boolean {
+        return manageFavoriteCharacterUseCase.isFavorite(character)
+    }
+
+    fun setShowOnlyFavorites(showOnlyFavorites: Boolean) {
+        _showOnlyFavorites.value = showOnlyFavorites
+    }
+
+    private fun refreshCharacterList() {
+        _allCharacters.value = _allCharacters.value
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rickandmorty.base
+package com.example.rickandmorty.commons.base_ui
 
 import androidx.lifecycle.Observer
 

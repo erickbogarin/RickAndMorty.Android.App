@@ -1,0 +1,23 @@
+package com.example.rickandmorty.features.character.domain
+
+import com.example.rickandmorty.features.character.data.FavoriteCharacterRepository
+import com.example.rickandmorty.features.character.data.model.Character
+import javax.inject.Inject
+
+class ManageFavoriteCharacterUseCase @Inject constructor(
+    private val repository: FavoriteCharacterRepository
+) {
+    fun toggleFavorite(character: Character): Boolean {
+        return if (repository.isFavorite(character)) {
+            repository.removeFavorite(character)
+            false
+        } else {
+            repository.saveFavorite(character)
+            true
+        }
+    }
+
+    fun isFavorite(character: Character): Boolean {
+        return repository.isFavorite(character)
+    }
+}
