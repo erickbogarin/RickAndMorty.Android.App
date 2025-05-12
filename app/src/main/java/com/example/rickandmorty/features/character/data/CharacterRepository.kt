@@ -30,7 +30,7 @@ class CharacterRepositoryImpl @Inject constructor(
                 if (errorResponse.error == "There is nothing here") {
                     throw EndOfListException()
                 } else {
-                    throw RuntimeException(errorBody)
+                    throw RuntimeException(errorResponse.error) // Extrai apenas a mensagem de erro
                 }
             }
         }

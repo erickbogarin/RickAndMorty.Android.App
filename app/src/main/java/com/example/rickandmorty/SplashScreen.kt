@@ -2,19 +2,27 @@ package com.example.rickandmorty
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import dagger.android.support.DaggerAppCompatActivity
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // NÃO use setContentView aqui!
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+        
+        lifecycleScope.launch {
+            // Inicializações necessárias
+            initializeApp()
+            
+            // Navega para MainActivity e finaliza esta activity
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             finish()
-        }, 2000)
+        }
+    }
+    
+    private suspend fun initializeApp() {
+        // Realizar inicializações necessárias
+        delay(1200)
     }
 }

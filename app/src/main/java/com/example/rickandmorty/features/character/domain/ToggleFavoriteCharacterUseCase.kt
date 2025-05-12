@@ -4,10 +4,10 @@ import com.example.rickandmorty.features.character.data.FavoriteCharacterReposit
 import com.example.rickandmorty.features.character.data.model.Character
 import javax.inject.Inject
 
-class ManageFavoriteCharacterUseCase @Inject constructor(
+class ToggleFavoriteCharacterUseCase @Inject constructor(
     private val repository: FavoriteCharacterRepository
 ) {
-    fun toggleFavorite(character: Character): Boolean {
+    fun execute(character: Character): Boolean {
         return if (repository.isFavorite(character)) {
             repository.removeFavorite(character)
             false
@@ -15,9 +15,5 @@ class ManageFavoriteCharacterUseCase @Inject constructor(
             repository.saveFavorite(character)
             true
         }
-    }
-
-    fun isFavorite(character: Character): Boolean {
-        return repository.isFavorite(character)
     }
 }

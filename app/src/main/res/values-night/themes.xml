@@ -2,6 +2,50 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Rickandmorty" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorTextOnDark</item>
+        <item name="colorSecondary">@color/colorSecondaryDark</item>
+        <item name="colorOnSecondary">@color/colorTextOnDark</item>
+        <item name="android:colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorOnBackground">@color/colorTextPrimaryDark</item>
+        <item name="colorSurface">@color/colorSurfaceDark</item>
+        <item name="colorOnSurface">@color/colorTextPrimaryDark</item>
+        <item name="colorError">@color/colorError</item>
+        <item name="colorOnError">@color/colorTextOnDark</item>
+    </style>
+
+    <!-- Bottom Navigation View style para tema escuro -->
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
+        <item name="backgroundTint">@color/colorSurfaceDark</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color_dark</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color_dark</item>
+        <item name="itemRippleColor">@color/colorPrimaryDark</item>
+        <item name="itemActiveIndicatorStyle">@style/App.ActiveIndicator.BottomNavigationView</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomNavigationView" parent="">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorSecondaryDark</item>
+        <item name="colorSurface">@color/colorSurfaceDark</item>
+        <item name="colorOnSurface">@color/colorTextPrimaryDark</item>
+    </style>
+
+    <style name="App.ActiveIndicator.BottomNavigationView" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="Theme.Rickandmorty.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#121212</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.Rickandmorty</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.TopRounded" parent="">
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 </resources>

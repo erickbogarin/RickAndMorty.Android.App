@@ -1,6 +1,7 @@
 package com.example.rickandmorty.features.character.di
 
 import androidx.lifecycle.ViewModel
+import com.example.rickandmorty.commons.di.FragmentScope
 import com.example.rickandmorty.config.ViewModelKey
 import com.example.rickandmorty.features.character.data.CharacterApiService
 import com.example.rickandmorty.features.character.data.CharacterRepository
@@ -24,7 +25,7 @@ import javax.inject.Singleton
 @Module
 abstract class CharacterModuleBuilder {
 
-    @Singleton
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [
             CharacterModule::class
@@ -41,19 +42,19 @@ abstract class CharacterModule {
     abstract fun provideCharacterViewModel(viewModel: CharacterViewModel): ViewModel
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideGetCharactersUseCase(getCharactersUseCase: GetCharactersUseCaseImpl): GetCharactersUseCase
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideCharacterRepository(repository: CharacterRepositoryImpl): CharacterRepository
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideGetFavoritesUseCase(getFavoritesUseCase: GetFavoritesUseCaseImpl): GetFavoritesUseCase
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideFavoriteCharacterRepository(
         repository: FavoriteCharacterRepositoryImpl
     ): FavoriteCharacterRepository

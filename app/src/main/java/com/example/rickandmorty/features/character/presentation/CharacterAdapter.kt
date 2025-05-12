@@ -48,6 +48,13 @@ class CharacterAdapter(
         if (index != -1) notifyItemChanged(index)
     }
 
+    fun removeItem(character: Character) {
+        val index = getCurrentItems().indexOfFirst { it.character.id == character.id }
+        if (index != -1) {
+            removeItemAt(index)
+            notifyItemRemoved(index)
+        }
+    }
 
     fun clear() {
         val itemCount = itemCount

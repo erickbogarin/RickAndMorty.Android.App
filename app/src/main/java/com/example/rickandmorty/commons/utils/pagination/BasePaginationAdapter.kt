@@ -89,6 +89,14 @@ abstract class BasePaginationAdapter<T, VH : RecyclerView.ViewHolder>(
         notifyDataSetChanged() // Atualiza a interface do RecyclerView
     }
 
+    fun removeItemAt(index: Int) {
+        if (index in 0 until itemSet.size) {
+            val item = itemSet.elementAt(index)
+            itemSet.remove(item)
+            notifyItemRemoved(index)
+        }
+    }
+
     private fun createLoadingViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return object : RecyclerView.ViewHolder(binding.root) {}

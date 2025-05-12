@@ -1,14 +1,13 @@
 package com.example.rickandmorty.features.character.data.datasource
 
-import android.content.SharedPreferences
+import com.example.rickandmorty.commons.serialization.JsonSerializer
+import com.example.rickandmorty.commons.storage.LocalStorage
 import com.example.rickandmorty.features.character.data.model.Character
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import javax.inject.Inject
 
 class FavoriteCharacterLocalDataSource @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
-    private val gson: Gson
+    private val localStorage: LocalStorage,
+    private val jsonSerializer: JsonSerializer
 ) {
 
     private val key = "favorite_characters"
@@ -28,12 +27,12 @@ class FavoriteCharacterLocalDataSource @Inject constructor(
     }
 
     fun getFavorites(): List<Character> {
-        val json = sharedPreferences.getString(key, "[]")
-        val type = object : TypeToken<List<Character>>() {}.type
-        return gson.fromJson(json, type) ?: emptyList()
+        val json = localStorage.getString(key, "[]") ?: "[]"
+        val type = jsonSerializer.listType(Character::class.java)
+        return jsonSerializer.fromJson(json, type) ?: emptyList()
     }
 
     private fun saveToPreferences(favorites: List<Character>) {
-        sharedPreferences.edit().putString(key, gson.toJson(favorites)).apply()
+        localStorage.putString(key, jsonSerializer.toJson(favorites))
     }
 }

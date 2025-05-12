@@ -1,6 +1,7 @@
 package com.example.rickandmorty.features.location.di
 
 import androidx.lifecycle.ViewModel
+import com.example.rickandmorty.commons.di.FragmentScope
 import com.example.rickandmorty.config.ViewModelKey
 import com.example.rickandmorty.features.location.data.LocationApiService
 import com.example.rickandmorty.features.location.data.LocationRepository
@@ -19,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 abstract class LocationModuleBuilder {
-    @Singleton
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [LocationModule::class]
     )
@@ -35,11 +36,11 @@ abstract class LocationModule {
     abstract fun provideLocationViewModel(viewModel: LocationViewModel): ViewModel
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideGetLocationsUseCase(getLocationsUseCase: GetLocationsUseCaseImpl): GetLocationsUseCase
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideLocationRepository(repository: LocationRepositoryImpl): LocationRepository
 
     @Module

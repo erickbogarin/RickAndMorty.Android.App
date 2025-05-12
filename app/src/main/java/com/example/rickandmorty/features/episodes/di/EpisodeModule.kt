@@ -1,6 +1,7 @@
 package com.example.rickandmorty.features.episodes.di
 
 import androidx.lifecycle.ViewModel
+import com.example.rickandmorty.commons.di.FragmentScope
 import com.example.rickandmorty.config.ViewModelKey
 import com.example.rickandmorty.features.character.data.CharacterRepository
 import com.example.rickandmorty.features.character.data.CharacterRepositoryImpl
@@ -21,7 +22,7 @@ import javax.inject.Singleton
 
 @Module
 abstract class EpisodeModuleBuilder {
-    @Singleton
+    @FragmentScope
     @ContributesAndroidInjector(
         modules = [
             EpisodeModule::class
@@ -38,11 +39,11 @@ abstract class EpisodeModule {
     abstract fun provideEpisodeViewModel(viewModel: EpisodeViewModel): ViewModel
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideGetEpisodesUseCase(getEpisodesUseCase: GetEpisodesUseCaseImpl): GetEpisodesUseCase
 
     @Binds
-    @Singleton
+    @FragmentScope
     abstract fun provideEpisodeRepository(repositoryImpl: EpisodeRepositoryImpl): EpisodeRepository
 
     @Module

@@ -11,15 +11,17 @@ import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.character.data.model.Character
+import com.example.rickandmorty.features.character.domain.CheckFavoriteCharacterUseCase
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
-import com.example.rickandmorty.features.character.domain.ManageFavoriteCharacterUseCase
+import com.example.rickandmorty.features.character.domain.ToggleFavoriteCharacterUseCase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
-    private val manageFavoriteCharacterUseCase: ManageFavoriteCharacterUseCase
+    private val toggleFavoriteCharacterUseCase: ToggleFavoriteCharacterUseCase,
+    private val checkFavoriteCharacterUseCase: CheckFavoriteCharacterUseCase,
 ) : BaseViewModel(), PaginationCallback {
 
     private val _allCharacters = MutableLiveData<List<Character>>(emptyList())
@@ -63,7 +65,7 @@ class CharacterViewModel @Inject constructor(
     }
 
     fun toggleFavorite(character: Character) {
-        val isFavorite = manageFavoriteCharacterUseCase.toggleFavorite(character)
+        val isFavorite = toggleFavoriteCharacterUseCase.execute(character)
         favoriteStatus.value = character to isFavorite
 
         if (_showOnlyFavorites.value == true) {
@@ -72,7 +74,7 @@ class CharacterViewModel @Inject constructor(
     }
 
     fun isFavorite(character: Character): Boolean {
-        return manageFavoriteCharacterUseCase.isFavorite(character)
+        return checkFavoriteCharacterUseCase.execute(character)
     }
 
     fun setShowOnlyFavorites(showOnlyFavorites: Boolean) {

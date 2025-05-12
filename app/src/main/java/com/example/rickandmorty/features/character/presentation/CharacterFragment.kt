@@ -84,10 +84,20 @@ class CharacterFragment : BaseMvvmFragment() {
             characterAdapter.removeLoadingView()
             characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
             binding.characterList.scrollToPosition(characterAdapter.itemCount - characters.size)
+
+            if (vm.showOnlyFavorites.value == true && characters.isEmpty()) {
+                binding.emptyFavoritesMessage.visibility = View.VISIBLE
+            } else {
+                binding.emptyFavoritesMessage.visibility = View.GONE
+            }
         })
 
-        vm.favoriteStatus.observe(viewLifecycleOwner) { (character, _) ->
-            characterAdapter.updateCharacter(character)
+        vm.favoriteStatus.observe(viewLifecycleOwner) { (character, isFavorite) ->
+            if (vm.showOnlyFavorites.value == true && !isFavorite) {
+                characterAdapter.removeItem(character)
+            } else {
+                characterAdapter.updateCharacter(character)
+            }
         }
 
         vm.showOnlyFavorites.observe(viewLifecycleOwner) { showOnlyFavorites ->

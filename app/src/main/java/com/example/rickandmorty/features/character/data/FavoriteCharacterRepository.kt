@@ -28,6 +28,9 @@ class FavoriteCharacterRepositoryImpl @Inject constructor(
     }
 
     override fun isFavorite(character: Character): Boolean {
-        return getFavorites().contains(character)
+        val favorites = getFavorites()
+        return character.id?.let { characterId ->
+            favorites?.any { it.id == characterId }
+        } ?: false
     }
 }

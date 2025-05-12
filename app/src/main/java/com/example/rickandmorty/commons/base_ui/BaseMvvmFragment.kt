@@ -1,13 +1,12 @@
 package com.example.rickandmorty.commons.base_ui
 
-import com.example.rickandmorty.di.ViewModelFactory
-
+import com.example.rickandmorty.di.DaggerViewModelFactory
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 open class BaseMvvmFragment : DaggerFragment() {
     @Inject
-    lateinit var factory: ViewModelFactory
+    lateinit var factory: DaggerViewModelFactory
 
     /**
      * Create a Activity View Model, a shared view model between Activity and Fragment
