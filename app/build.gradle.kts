@@ -47,28 +47,58 @@ android {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.10"
+}
+
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform() // <- obrigatório para JUnit 5 funcionar
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.withType<Test>()) // JUnit 5
+    dependsOn("testDebugUnitTest") // ou `test` se estiver rodando todos
 
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
 
-    classDirectories.setFrom(
-        fileTree("${buildDir}/tmp/kotlin-classes/debug") {
-            exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
-        }
+    val fileFilter = listOf(
+        "**/di/**",
+        "**/BuildConfig.*",
+        "**/R.class",
+        "**/R$*.class",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "**/databinding/**",
+        "**/*Binding.class",
+        "**/serialization/**",
+        "**/exceptions/**",
+        "**/model/**",
+        "**/storage/**",
+        "**/*\$InjectAdapter.*",
+        "**/*\$ModuleAdapter.*",
+        "**/Dagger*.*",
+        "**/*_Factory.*",
+        "**/*_MembersInjector.*",
+        "**/*Adapter**", // Ignorar adapters
+        "**/*Fragment**"  // Ignorar fragments
     )
 
+    val javaClasses = fileTree("${buildDir}/intermediates/javac/debug/classes") {
+        exclude(fileFilter)
+    }
+
+    val kotlinClasses = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
+
+    classDirectories.setFrom(files(javaClasses, kotlinClasses))
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
-
-    executionData.setFrom(
-        fileTree(buildDir).include("jacoco/test.exec")
-    )
+    executionData.setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
 }
 
 dependencies {
@@ -107,9 +137,4 @@ dependencies {
     testImplementation("androidx.test:core:1.5.0")
     testImplementation("io.reactivex.rxjava2:rxjava:2.2.21")
     testImplementation("io.reactivex.rxjava2:rxandroid:2.1.1")
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform() // Certifique-se de que está usando a plataforma correta
-    finalizedBy("jacocoTestReport") // Garante que o relatório seja gerado após os testes
 }
