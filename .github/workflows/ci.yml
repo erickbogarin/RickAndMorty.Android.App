@@ -1,99 +1,110 @@
-name: CI Pipeline
+name: Android CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build:
-    runs-on: macOS-latest
-    strategy:
-      matrix:
-        java_version: [17]
-        os: [macOS-latest]
+    runs-on: ubuntu-latest
+
+    env:
+      ADB_INSTALL_TIMEOUT: 20
+      JAVA_VERSION: 17
 
     steps:
-    - name: Install coreutils for macOS
-      run: brew install coreutils
+      # Checkout do código fonte
+      - name: Checkout source
+        uses: actions/checkout@v4
 
-    - name: Check out code
-      uses: actions/checkout@v4
+      # Configuração do JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # ou 'zulu', 'corretto', etc
+          java-version: ${{ env.JAVA_VERSION }}
 
-    - name: Cache Gradle
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          gradle-${{ runner.os }}-
-      
-    - name: Install JDK ${{ matrix.java_version }}
-      uses: actions/setup-java@v1
-      with:
-        java-version: ${{ matrix.java_version }}
+      # Configuração do Android SDK
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
 
-    - name: Set up Android SDK
-      uses: android-actions/setup-android@v2
+      # Tornar o gradlew executável
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
-    - name: Gradle Wrapper Validation
-      uses: gradle/wrapper-validation-action@v1
+      # Cache do Gradle para otimizar os tempos de build
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
+      # Construção do projeto
+      - name: Build project
+        run: ./gradlew assembleDebug
 
-    - name: Configure Gradle
-       # Initial gradle configuration, install dependencies, etc
-      run: ./gradlew help
+      # Construção do APK de testes Android
+      - name: Build AndroidTest APK
+        run: ./gradlew assembleAndroidTest
 
-    - name: Check Code Formatting
-      run: ./gradlew spotlessCheck
+      # Criar o AVD e iniciar o emulador
+      - name: Create AVD and start emulator
+        run: |
+          echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
+          emulator -avd test -no-audio -no-window -gpu swiftshader_indirect -no-snapshot &
+          adb wait-for-device
+          adb shell input keyevent 82
+        env:
+          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
 
-    - name: Run Static Analysis
-      run: ./gradlew detekt
+      # Rodar os testes de instrumentação
+      - name: Run Instrumentation Tests
+        run: ./gradlew connectedCheck --stacktrace
 
-    - name: Run Lint
-      run: ./gradlew lint
+      # Rodar a análise de código estático com Detekt
+      - name: Run Static Analysis
+        run: ./gradlew detekt
 
-    - name: Run Unit Tests with Coverage
-      run: ./gradlew testDebugUnitTest jacocoTestReport
+      # Verificar formatação de código com Spotless
+      - name: Check Code Formatting
+        run: ./gradlew spotlessCheck
 
-    - name: Generate Test Coverage Report
-      run: ./gradlew jacocoTestReport
+      # Rodar Lint
+      - name: Run Lint
+        run: ./gradlew lint
 
-    - name: Upload Coverage Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: app/build/reports/jacoco/jacocoTestReport/html
-    
-    - name: Run Instrumentation Tests
-      uses: malinskiy/action-android/emulator-run-cmd@release/0.0.3
-      with:
-        cmd: ./gradlew connectedCheck --stacktrace
-        api: 29
-        tag: default
-        abi: x86_64
+      # Rodar os testes unitários com cobertura de código
+      - name: Run Unit Tests with Coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport
 
-    - name: Build APK
-      run: ./gradlew assembleDebug
+      # Gerar o relatório de cobertura de testes
+      - name: Generate Test Coverage Report
+        run: ./gradlew jacocoTestReport
 
-    - name: Verify APK Exists
-      run: ls app/build/outputs/apk/debug/
+      # Fazer o upload do relatório de cobertura
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport/html
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-debug.apk
-        path: app/build/outputs/apk/debug/app-debug.apk
-    
-    - name: Reclaim Gradle Daemons
-      run: ./gradlew --stop
+      # Fazer o upload do APK gerado
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 
-    - name: Final Checks
-      run: ./gradlew check --stacktrace
+      # Finalizar os daemons do Gradle
+      - name: Reclaim Gradle Daemons
+        run: ./gradlew --stop
+
+      # Rodar verificações finais (ajuda a garantir que tudo esteja em ordem)
+      - name: Final Checks
+        run: ./gradlew check --stacktrace
