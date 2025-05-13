@@ -1,7 +1,7 @@
 package com.example.rickandmorty.features.episodes.data.repository
 
 import com.example.rickandmorty.commons.exceptions.EndOfListException
-import com.example.rickandmorty.commons.exceptions.ErrorResponse
+import com.example.rickandmorty.commons.exceptions.ResourceException
 import com.example.rickandmorty.features.episodes.data.datasource.EpisodeRemoteDataSource
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 import com.example.rickandmorty.features.episodes.data.model.EpisodesResponse
@@ -25,7 +25,7 @@ class EpisodeRepositoryImpl @Inject constructor(
                 response.body()?.results ?: throw RuntimeException("Response body is null")
             } else {
                 val errorBody = response.errorBody()?.string()
-                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                val errorResponse = Gson().fromJson(errorBody, ResourceException::class.java)
                 if (errorResponse.error == "There is nothing here") {
                     throw EndOfListException()
                 } else {

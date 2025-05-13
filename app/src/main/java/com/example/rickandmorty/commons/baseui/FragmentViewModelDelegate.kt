@@ -1,4 +1,4 @@
-package com.example.rickandmorty.commons.base_ui
+package com.example.rickandmorty.commons.baseui
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider

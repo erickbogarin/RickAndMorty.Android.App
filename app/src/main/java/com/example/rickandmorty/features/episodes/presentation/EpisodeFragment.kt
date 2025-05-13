@@ -6,16 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
-import com.example.rickandmorty.commons.utils.enableScrollToTop
+import com.example.rickandmorty.commons.baseui.BaseMvvmFragment
 import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentEpisodeBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class EpisodeFragment : BaseMvvmFragment() {
     private var vm by appViewModel<EpisodeViewModel>()

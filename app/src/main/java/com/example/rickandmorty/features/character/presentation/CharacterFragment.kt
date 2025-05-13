@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.rickandmorty.commons.base_ui.BaseMvvmFragment
-import com.example.rickandmorty.commons.base_ui.SafeObserver
+import com.example.rickandmorty.commons.baseui.BaseMvvmFragment
+import com.example.rickandmorty.commons.baseui.SafeObserver
 import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentCharacterBinding
 

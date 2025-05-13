@@ -19,14 +19,35 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '17'  # Update to Java 17
+        java-version: '17'
         distribution: 'temurin'
 
     - name: Set Gradle Wrapper as Executable
       run: chmod +x ./gradlew
 
-    - name: Install dependencies
+    - name: Check Code Formatting
+      run: ./gradlew spotlessCheck
+
+    - name: Run Static Analysis
+      run: ./gradlew detekt
+
+    - name: Install Dependencies
       run: ./gradlew dependencies
 
-    - name: Run tests
+    - name: Run Lint
+      run: ./gradlew lint
+
+    - name: Run Unit Tests
       run: ./gradlew test
+
+    - name: Run Instrumented Tests
+      run: ./gradlew connectedAndroidTest
+
+    - name: Build APK
+      run: ./gradlew assembleDebug
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk

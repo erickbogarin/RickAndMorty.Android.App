@@ -4,7 +4,10 @@ import com.example.rickandmorty.commons.serialization.JsonSerializer
 import com.example.rickandmorty.commons.storage.LocalStorage
 import com.example.rickandmorty.features.character.data.model.Character
 import com.example.rickandmorty.utils.character.createMockCharacter
-import io.mockk.*
+import io.mockk.every
+import io.mockk.justRun
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

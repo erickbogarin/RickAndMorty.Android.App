@@ -1,4 +1,4 @@
-package com.example.rickandmorty.commons.base_ui
+package com.example.rickandmorty.commons.baseui
 
 import com.example.rickandmorty.di.DaggerViewModelFactory
 import dagger.android.support.DaggerFragment

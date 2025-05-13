@@ -1,7 +1,7 @@
 package com.example.rickandmorty.features.character.data
 
 import com.example.rickandmorty.commons.exceptions.EndOfListException
-import com.example.rickandmorty.commons.exceptions.ErrorResponse
+import com.example.rickandmorty.commons.exceptions.ResourceException
 import com.example.rickandmorty.features.character.data.model.CharacterResponse
 import com.example.rickandmorty.utils.character.createMockCharacter
 import com.example.rickandmorty.utils.character.createMockInfo
@@ -10,7 +10,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.reactivex.Single
 import okhttp3.ResponseBody
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import retrofit2.Response
 
@@ -40,7 +42,7 @@ class CharacterRepositoryImplTest {
     @Test
     fun `getAllCharacters should throw EndOfListException when error response indicates end of list`() {
         // Arrange
-        val errorResponse = ErrorResponse(error = "There is nothing here")
+        val errorResponse = ResourceException(error = "There is nothing here")
         val errorBody = ResponseBody.create(null, Gson().toJson(errorResponse))
         val mockResponse = Response.error<CharacterResponse>(404, errorBody)
         every { service.getCharacters(1) } returns Single.just(mockResponse)

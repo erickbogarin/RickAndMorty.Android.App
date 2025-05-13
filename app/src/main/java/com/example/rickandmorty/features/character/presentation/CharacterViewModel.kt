@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
-import com.example.rickandmorty.commons.base_ui.BaseViewModel
+import com.example.rickandmorty.commons.baseui.BaseViewModel
 import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState

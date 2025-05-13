@@ -8,9 +8,12 @@ import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
 import com.example.rickandmorty.features.character.domain.ToggleFavoriteCharacterUseCase
 import com.example.rickandmorty.utils.character.createMockCharacter
 import com.example.rickandmorty.utils.ViewModelTestExtension
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Single
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
