@@ -80,7 +80,12 @@ jobs:
       - name: Build AndroidTest APK
         run: ./gradlew assembleAndroidTest
 
-      # Criar o AVD e iniciar o emulador
+       # Criar e baixar as imagens de sistema necessárias para o emulador
+      - name: Install system image for AVD
+        run: |
+          sdkmanager "system-images;android-30;default;x86_64"
+          sdkmanager --list # Verifique se a imagem foi instalada corretamente
+
       - name: Create AVD and start emulator
         run: |
           echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
