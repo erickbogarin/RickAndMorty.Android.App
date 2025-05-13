@@ -6,6 +6,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.1"
     id("com.github.ben-manes.versions") version "0.48.0"
     id("org.jetbrains.kotlinx.kover") version "0.7.3"
+    id 'jacoco'
 }
 
 spotless {
@@ -17,4 +18,16 @@ spotless {
 
 detekt {
     config = files("detekt-config.yml")
+}
+
+jacoco {
+    toolVersion = "0.8.8" // Use a versão mais recente
+}
+
+tasks.jacocoTestReport {
+    dependsOn test // Garante que os testes sejam executados antes do relatório
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
