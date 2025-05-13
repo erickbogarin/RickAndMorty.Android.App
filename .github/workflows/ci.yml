@@ -11,10 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    resources:
-      limits:
-        memory: 8GB
-        cpu: 2
 
     steps:
     - name: Clear GitHub Actions Cache

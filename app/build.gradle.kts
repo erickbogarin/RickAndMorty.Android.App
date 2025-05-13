@@ -51,20 +51,24 @@ jacoco {
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.named("testDebugUnitTest")) // Substitua pelo nome correto do task de teste, se necessário
+    dependsOn(tasks.withType<Test>()) // JUnit 5
 
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
 
-    val fileTree = fileTree("${buildDir}/intermediates/javac/debug/classes") {
-        exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
-    }
+    classDirectories.setFrom(
+        fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+            exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+        }
+    )
 
-    classDirectories.setFrom(fileTree)
-    sourceDirectories.setFrom(files("src/main/java"))
-    executionData.setFrom(files("${buildDir}/jacoco/testDebugUnitTest.exec"))
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+
+    executionData.setFrom(
+        fileTree(buildDir).include("jacoco/test.exec")
+    )
 }
 
 dependencies {
