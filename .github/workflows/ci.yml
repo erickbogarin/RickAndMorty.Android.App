@@ -13,7 +13,7 @@ jobs:
     runs-on: macOS-latest
     strategy:
       matrix:
-        java-version: [17]
+        java_version: [17]
         os: [macOS-latest]
 
     steps:
