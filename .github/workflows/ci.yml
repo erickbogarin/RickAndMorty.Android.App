@@ -62,18 +62,15 @@ jobs:
 
       # Executar testes unitários com cobertura
       - name: Run Unit Tests with Coverage
-        run: ./gradlew testDebugUnitTest jacocoTestReport
-
-      # Gerar relatório de cobertura
-      - name: Generate Test Coverage Report
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew testDebugUnitTest jacocoTestReport --stacktrace
 
       # Upload do relatório de cobertura
       - name: Upload Coverage Report
+        if: always() # Run even if tests fail
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: app/build/reports/jacoco/jacocoTestReport/html
+          path: app/build/reports/jacoco/html # Updated to match build.gradle.kts
 
       # Construir projeto
       - name: Build project
