@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Install coreutils for macOS
-        run: brew install coreutils
+      run: brew install coreutils
 
     - name: Check out code
       uses: actions/checkout@v4
