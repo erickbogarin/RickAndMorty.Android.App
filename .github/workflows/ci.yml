@@ -70,20 +70,16 @@ jobs:
         sdk-version: '33'
         ndk-version: 'latest'
 
-    - name: Start Android Emulator
-      uses: android-actions/start-emulator@main
-      with:
-        api-level: ${{ steps.setup_android.outputs.sdk-version }}
-        arch: x86_64
-        avd-name: test-avd
-        emulator-options: -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim
-        disable-animations: true
-        cores: 2
-        memory: 4096
-        script: adb wait-for-device shell 'pm list packages'
+    - name: Create and Start Emulator
+      run: |
+        echo "no" | avdmanager create avd -n test-avd -k "system-images;android-33;google_apis_playstore;x86_64" --force
+        emulator -avd test-avd -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim &
+        adb wait-for-device shell 'pm list packages' # Espera o emulador iniciar
 
     - name: Run Instrumented Tests
-      run: ./gradlew connectedAndroidTest
+      run: |
+        chmod +x gradlew
+        ./gradlew connectedAndroidTest
 
     - name: Build APK
       run: ./gradlew assembleDebug
