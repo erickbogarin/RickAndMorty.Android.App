@@ -85,15 +85,48 @@ jobs:
         run: |
           sdkmanager "system-images;android-30;default;x86_64"
           sdkmanager --list # Verifique se a imagem foi instalada corretamente
+        
+      - name: Accept licenses
+        run: yes | sdkmanager --licenses
 
       - name: Create AVD and start emulator
         run: |
+          echo "📦 Installing system image..."
+          sdkmanager "system-images;android-30;default;x86_64"
+
+          echo "🛠️ Creating AVD..."
           echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
-          emulator -avd test -no-audio -no-window -gpu swiftshader_indirect -no-snapshot &
-          adb wait-for-device
+
+          echo "🚀 Starting emulator..."
+          emulator -avd test -no-audio -no-window -gpu swiftshader_indirect -snapshot mySnapshot &
+
+          echo "⌛ Waiting for emulator to boot (timeout: 15 min)..."
+          boot_completed=""
+
+          for i in {1..900}; do
+            boot_completed=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+            if [[ "$boot_completed" == "1" ]]; then
+              echo "✅ Emulator booted successfully!"
+              break
+            fi
+            if (( $i % 30 == 0 )); then
+              echo "⏳ Still waiting... $i seconds"
+              adb devices
+            fi
+            sleep 1
+          done
+
+          if [[ "$boot_completed" != "1" ]]; then
+            echo "❌ Emulator failed to boot. Timeout reached."
+            adb devices
+            emulator -list-avds
+            ps aux | grep emulator
+            exit 1
+          fi
+
+          echo "📱 Sending unlock keyevent..."
           adb shell input keyevent 82
-        env:
-          ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
+
 
       # Rodar os testes de instrumentação
       - name: Run Instrumentation Tests
