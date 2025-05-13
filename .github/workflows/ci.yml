@@ -45,7 +45,34 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      # Construção do projeto
+      # Verificar a formatação de código com Spotless
+      - name: Check Code Formatting
+        run: ./gradlew spotlessCheck
+
+      # Rodar análise estática com Detekt
+      - name: Run Static Analysis
+        run: ./gradlew detekt
+
+      # Rodar Lint
+      - name: Run Lint
+        run: ./gradlew lint
+
+      # Rodar os testes unitários com cobertura de código
+      - name: Run Unit Tests with Coverage
+        run: ./gradlew testDebugUnitTest jacocoTestReport
+
+      # Gerar o relatório de cobertura de testes
+      - name: Generate Test Coverage Report
+        run: ./gradlew jacocoTestReport
+
+      # Fazer o upload do relatório de cobertura
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: app/build/reports/jacoco/jacocoTestReport/html
+
+      # Construção do APK
       - name: Build project
         run: ./gradlew assembleDebug
 
@@ -67,33 +94,6 @@ jobs:
       - name: Run Instrumentation Tests
         run: ./gradlew connectedCheck --stacktrace
 
-      # Rodar a análise de código estático com Detekt
-      - name: Run Static Analysis
-        run: ./gradlew detekt
-
-      # Verificar formatação de código com Spotless
-      - name: Check Code Formatting
-        run: ./gradlew spotlessCheck
-
-      # Rodar Lint
-      - name: Run Lint
-        run: ./gradlew lint
-
-      # Rodar os testes unitários com cobertura de código
-      - name: Run Unit Tests with Coverage
-        run: ./gradlew testDebugUnitTest jacocoTestReport
-
-      # Gerar o relatório de cobertura de testes
-      - name: Generate Test Coverage Report
-        run: ./gradlew jacocoTestReport
-
-      # Fazer o upload do relatório de cobertura
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: app/build/reports/jacoco/jacocoTestReport/html
-
       # Fazer o upload do APK gerado
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -101,7 +101,7 @@ jobs:
           name: app-debug.apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      # Finalizar os daemons do Gradle
+      # Reivindicar daemons do Gradle
       - name: Reclaim Gradle Daemons
         run: ./gradlew --stop
 
