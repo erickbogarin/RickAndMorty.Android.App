@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        api-level: [30]
 
     steps:
     - name: Check out code
@@ -20,7 +23,13 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '17'\
+      
+    - name: Enable KVM
+      run: |
+        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+        sudo udevadm control --reload-rules
+        sudo udevadm trigger --name-match=kvm
   
     - name: Cache Gradle Wrapper
       uses: actions/cache@v4
@@ -35,6 +44,15 @@ jobs:
         key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*', '**/gradle-plugin/*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-caches-
+    
+    - name: AVD cache
+      uses: actions/cache@v4
+      id: avd-cache
+      with:
+        path: |
+          ~/.android/avd/*
+          ~/.android/adb*
+        key: avd-${{ matrix.api-level }}
 
     - name: Make Gradle Executable
       run: chmod +x gradlew
@@ -62,28 +80,25 @@ jobs:
       with:
         name: coverage-report
         path: app/build/reports/jacoco/jacocoTestReport/html
-
-    - name: Set up Android SDK
-      id: setup_android
-      uses: android-actions/setup-android@v3
+    
+    - name: Create AVD and Generate Snapshot for Caching
+      if: steps.avd-cache.outputs.cache-hit != 'true'
+      uses: reactivecircus/android-emulator-runner@v2
       with:
-        sdk-version: '33'
-        ndk-version: 'latest'
-
-    - name: Install Required System Image
-      run: |
-        echo yes | sdkmanager "system-images;android-33;google_apis_playstore;x86_64"
-
-    - name: Create and Start Emulator
-      run: |
-        echo "no" | avdmanager create avd -n test-avd -k "system-images;android-33;google_apis_playstore;x86_64" --force
-        emulator -avd test-avd -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim &
-        adb wait-for-device shell 'pm list packages' # Wait for emulator to start
+        api-level: ${{ matrix.api-level }}
+        force-avd-creation: true
+        emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: true
+        script: echo "Generated AVD snapshot for caching."
 
     - name: Run Instrumented Tests
-      run: |
-        chmod +x gradlew
-        ./gradlew connectedAndroidTest
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: ${{ matrix.api-level }}
+        force-avd-creation: false
+        emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+        disable-animations: true
+        script: ./gradlew connectedAndroidTest
 
     - name: Build APK
       run: ./gradlew assembleDebug
