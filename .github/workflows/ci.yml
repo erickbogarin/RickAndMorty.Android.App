@@ -11,6 +11,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    resources:
+      limits:
+        memory: 8GB
+        cpu: 2
 
     steps:
     - name: Clear GitHub Actions Cache
@@ -58,7 +62,9 @@ jobs:
         api-level: 30
         target: google_apis
         arch: x86_64
-        profile: pixel_4
+        profile: Nexus 5
+        emulator-options: "-no-snapshot -noaudio -no-boot-anim"
+        emulator-boot-timeout: 600 
         script: ./gradlew connectedAndroidTest
 
     - name: Build APK
