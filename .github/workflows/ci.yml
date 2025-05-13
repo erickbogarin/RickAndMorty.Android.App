@@ -25,6 +25,9 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
     
+    - name: Check Gradle checksum
+      run: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ZacSweers/check-gradle-checksums/master/check-gradle-checksums.sh)"
+    
     - name: Install Android SDK
       uses: malinskiy/action-android/install-sdk@release/0.0.3
 
@@ -41,15 +44,6 @@ jobs:
         key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle*', '**/gradle-plugin/*') }}
         restore-keys: |
           ${{ runner.os }}-gradle-caches-
-    
-    - name: AVD cache
-      uses: actions/cache@v4
-      id: avd-cache
-      with:
-        path: |
-          ~/.android/avd/*
-          ~/.android/adb*
-        key: avd-${{ matrix.api-level }}
 
     - name: Make Gradle Executable
       run: chmod +x gradlew
