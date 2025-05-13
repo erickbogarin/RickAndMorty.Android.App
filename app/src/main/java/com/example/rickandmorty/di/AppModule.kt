@@ -17,7 +17,7 @@ import javax.inject.Singleton
 abstract class AppModule {
     @ActivityScope
     @ContributesAndroidInjector(
-        modules = [CharacterModuleBuilder::class, EpisodeModuleBuilder::class, LocationModuleBuilder::class]
+        modules = [CharacterModuleBuilder::class, EpisodeModuleBuilder::class, LocationModuleBuilder::class],
     )
     abstract fun provideMainActivity(): MainActivity
 
@@ -26,7 +26,7 @@ abstract class AppModule {
         @Provides
         @Singleton
         fun provideViewModelFactoryProviders(
-            providers: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+            providers: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>,
         ): ViewModelProvider.Factory = DaggerViewModelFactory(providers)
     }
 }

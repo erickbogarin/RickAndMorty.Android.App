@@ -10,7 +10,7 @@ interface GetLocationsUseCase {
 }
 
 class GetLocationsUseCaseImpl @Inject constructor(
-    private val repository: LocationRepository
+    private val repository: LocationRepository,
 ) : GetLocationsUseCase {
     override fun execute(page: Int): Single<List<Location>> = repository.getAllLocations(page)
 }

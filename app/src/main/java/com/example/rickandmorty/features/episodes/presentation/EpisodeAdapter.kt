@@ -1,15 +1,11 @@
 package com.example.rickandmorty.features.episodes.presentation
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.commons.utils.pagination.BasePaginationAdapter
-import com.example.rickandmorty.commons.utils.pagination.PaginationAdapter
-import com.example.rickandmorty.databinding.ItemEndOfListBinding
 import com.example.rickandmorty.databinding.ItemEpisodeBinding
-import com.example.rickandmorty.databinding.ItemLoadingBinding
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 
 sealed class ListItem {
@@ -17,11 +13,11 @@ sealed class ListItem {
 }
 
 class EpisodeAdapter(
-    private val context: Context
+    private val context: Context,
 ) : BasePaginationAdapter<ListItem.EpisodeItem, EpisodeAdapter.CardViewHolder>(
     viewTypeItem = 0,
     viewTypeLoading = 1,
-    viewTypeEndOfList = 2
+    viewTypeEndOfList = 2,
 ) {
 
     inner class CardViewHolder(private val binding: ItemEpisodeBinding) :

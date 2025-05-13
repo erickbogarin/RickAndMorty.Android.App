@@ -20,7 +20,6 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 abstract class CharacterModuleBuilder {
@@ -28,8 +27,8 @@ abstract class CharacterModuleBuilder {
     @FragmentScope
     @ContributesAndroidInjector(
         modules = [
-            CharacterModule::class
-        ]
+            CharacterModule::class,
+        ],
     )
     abstract fun provideCharacterFragment(): CharacterFragment
 }
@@ -56,7 +55,7 @@ abstract class CharacterModule {
     @Binds
     @FragmentScope
     abstract fun provideFavoriteCharacterRepository(
-        repository: FavoriteCharacterRepositoryImpl
+        repository: FavoriteCharacterRepositoryImpl,
     ): FavoriteCharacterRepository
 
     @Module

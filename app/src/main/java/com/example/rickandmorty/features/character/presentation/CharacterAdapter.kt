@@ -17,11 +17,11 @@ sealed class ListItem {
 class CharacterAdapter(
     private val context: Context,
     private val onFavoriteClick: (Character) -> Unit,
-    private val isFavorite: (Character) -> Boolean
+    private val isFavorite: (Character) -> Boolean,
 ) : BasePaginationAdapter<ListItem.CharacterItem, CharacterAdapter.CardViewHolder>(
     viewTypeItem = 0,
     viewTypeLoading = 1,
-    viewTypeEndOfList = 2
+    viewTypeEndOfList = 2,
 ) {
 
     inner class CardViewHolder(private val binding: ItemCardViewBinding) :
@@ -34,7 +34,7 @@ class CharacterAdapter(
             Picasso.get().load(character.image).into(binding.image)
 
             binding.btnFavorite.setImageResource(
-                if (isFavorite(character)) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border
+                if (isFavorite(character)) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border,
             )
 
             binding.btnFavorite.setOnClickListener {

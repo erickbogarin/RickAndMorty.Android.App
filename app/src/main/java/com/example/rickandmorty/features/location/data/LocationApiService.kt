@@ -9,6 +9,6 @@ import retrofit2.http.Query
 interface LocationApiService {
     @GET("location")
     fun getLocations(
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): Single<Response<LocationResponse>>
 }

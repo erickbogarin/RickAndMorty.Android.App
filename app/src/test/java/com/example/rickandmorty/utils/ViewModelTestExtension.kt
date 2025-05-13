@@ -1,10 +1,10 @@
 package com.example.rickandmorty.utils
 
+import androidx.arch.core.executor.ArchTaskExecutor
+import androidx.arch.core.executor.TaskExecutor
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import androidx.arch.core.executor.ArchTaskExecutor
-import androidx.arch.core.executor.TaskExecutor
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext

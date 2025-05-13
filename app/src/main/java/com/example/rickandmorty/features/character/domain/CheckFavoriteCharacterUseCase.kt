@@ -5,7 +5,7 @@ import com.example.rickandmorty.features.character.data.model.Character
 import javax.inject.Inject
 
 class CheckFavoriteCharacterUseCase @Inject constructor(
-    private val repository: FavoriteCharacterRepository
+    private val repository: FavoriteCharacterRepository,
 ) {
     fun execute(character: Character): Boolean {
         return repository.isFavorite(character)

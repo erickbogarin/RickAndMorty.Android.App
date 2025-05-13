@@ -17,7 +17,7 @@ class GetFavoritesUseCaseImplTest {
         // Arrange
         val mockFavorites = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         every { repository.getFavorites() } returns mockFavorites
 

@@ -18,8 +18,9 @@ class CharacterFragment : BaseMvvmFragment() {
     private lateinit var paginationHandler: PaginationHandler
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentCharacterBinding.inflate(inflater)
         return binding.root
@@ -46,7 +47,7 @@ class CharacterFragment : BaseMvvmFragment() {
             },
             isFavorite = { character ->
                 vm.isFavorite(character)
-            }
+            },
         )
 
         binding.characterList.apply {
@@ -73,24 +74,27 @@ class CharacterFragment : BaseMvvmFragment() {
             paginationState = vm.paginationState,
             adapter = characterAdapter,
             callback = vm,
-            tag = "CharacterFragment"
+            tag = "CharacterFragment",
         )
 
         paginationHandler.attach()
     }
 
     private fun setupObservers() {
-        vm.characters.observe(viewLifecycleOwner, SafeObserver { characters ->
-            characterAdapter.removeLoadingView()
-            characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
-            binding.characterList.scrollToPosition(characterAdapter.itemCount - characters.size)
+        vm.characters.observe(
+            viewLifecycleOwner,
+            SafeObserver { characters ->
+                characterAdapter.removeLoadingView()
+                characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
+                binding.characterList.scrollToPosition(characterAdapter.itemCount - characters.size)
 
-            if (vm.showOnlyFavorites.value == true && characters.isEmpty()) {
-                binding.emptyFavoritesMessage.visibility = View.VISIBLE
-            } else {
-                binding.emptyFavoritesMessage.visibility = View.GONE
-            }
-        })
+                if (vm.showOnlyFavorites.value == true && characters.isEmpty()) {
+                    binding.emptyFavoritesMessage.visibility = View.VISIBLE
+                } else {
+                    binding.emptyFavoritesMessage.visibility = View.GONE
+                }
+            },
+        )
 
         vm.favoriteStatus.observe(viewLifecycleOwner) { (character, isFavorite) ->
             if (vm.showOnlyFavorites.value == true && !isFavorite) {

@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class LocationViewModel @Inject constructor(
-    private val getLocationsUseCase: GetLocationsUseCase
+    private val getLocationsUseCase: GetLocationsUseCase,
 ) : BaseViewModel(), PaginationCallback {
 
     val locations = MutableLiveData<List<Location>>()
@@ -45,7 +45,7 @@ class LocationViewModel @Inject constructor(
                     } else {
                         Log.e("LocationViewModel", error.message.orEmpty())
                     }
-                }
+                },
             )
     }
 

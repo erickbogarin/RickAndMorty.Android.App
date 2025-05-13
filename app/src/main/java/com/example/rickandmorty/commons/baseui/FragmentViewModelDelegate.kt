@@ -10,7 +10,7 @@ import kotlin.reflect.KProperty
 class FragmentViewModelDelegate<T : BaseViewModel>(
     private val clazz: KClass<T>,
     private val fragment: Fragment,
-    private val vmFactory: () -> DaggerViewModelFactory
+    private val vmFactory: () -> DaggerViewModelFactory,
 ) : ReadWriteProperty<Fragment, T> {
 
     override fun getValue(thisRef: Fragment, property: KProperty<*>): T {

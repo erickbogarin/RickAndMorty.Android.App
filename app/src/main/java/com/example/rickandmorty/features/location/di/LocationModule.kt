@@ -16,13 +16,12 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 abstract class LocationModuleBuilder {
     @FragmentScope
     @ContributesAndroidInjector(
-        modules = [LocationModule::class]
+        modules = [LocationModule::class],
     )
     abstract fun provideLocationFragment(): LocationFragment
 }

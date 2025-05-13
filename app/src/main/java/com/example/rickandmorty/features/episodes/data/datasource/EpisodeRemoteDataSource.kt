@@ -9,5 +9,6 @@ import retrofit2.http.Query
 interface EpisodeRemoteDataSource {
     @GET("episode")
     fun getEpisodes(
-        @Query("page") page: Int): Single<Response<EpisodesResponse>>
+        @Query("page") page: Int,
+    ): Single<Response<EpisodesResponse>>
 }

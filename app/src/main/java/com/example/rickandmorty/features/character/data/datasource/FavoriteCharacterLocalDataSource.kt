@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class FavoriteCharacterLocalDataSource @Inject constructor(
     private val localStorage: LocalStorage,
-    private val jsonSerializer: JsonSerializer
+    private val jsonSerializer: JsonSerializer,
 ) {
 
     private val key = "favorite_characters"

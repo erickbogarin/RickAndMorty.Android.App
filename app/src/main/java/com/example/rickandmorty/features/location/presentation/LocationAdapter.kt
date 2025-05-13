@@ -14,11 +14,11 @@ sealed class ListItem {
 }
 
 class LocationAdapter(
-    private val context: Context
+    private val context: Context,
 ) : BasePaginationAdapter<ListItem.LocationItem, LocationAdapter.LocationViewHolder>(
     viewTypeItem = 0,
     viewTypeLoading = 1,
-    viewTypeEndOfList = 2
+    viewTypeEndOfList = 2,
 ) {
 
     inner class LocationViewHolder(private val binding: ItemLocationBinding) :

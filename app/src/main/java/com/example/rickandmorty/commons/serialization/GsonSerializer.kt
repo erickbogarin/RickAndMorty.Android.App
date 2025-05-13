@@ -6,7 +6,7 @@ import java.lang.reflect.Type
 import javax.inject.Inject
 
 class GsonSerializer @Inject constructor(
-    private val gson: Gson
+    private val gson: Gson,
 ) : JsonSerializer {
 
     override fun <T> toJson(data: T): String {

@@ -6,8 +6,8 @@ import com.example.rickandmorty.features.character.data.model.Character
 import com.example.rickandmorty.features.character.domain.CheckFavoriteCharacterUseCase
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
 import com.example.rickandmorty.features.character.domain.ToggleFavoriteCharacterUseCase
-import com.example.rickandmorty.utils.character.createMockCharacter
 import com.example.rickandmorty.utils.ViewModelTestExtension
+import com.example.rickandmorty.utils.character.createMockCharacter
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -31,7 +31,7 @@ class CharacterViewModelTest {
         viewModel = CharacterViewModel(
             getCharactersUseCase,
             toggleFavoriteCharacterUseCase,
-            checkFavoriteCharacterUseCase
+            checkFavoriteCharacterUseCase,
         )
     }
 

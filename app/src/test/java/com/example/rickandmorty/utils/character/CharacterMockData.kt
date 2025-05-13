@@ -9,7 +9,7 @@ fun createMockInfo(
     count: Int = 2,
     pages: Int = 1,
     next: String? = null,
-    prev: String? = null
+    prev: String? = null,
 ): Info {
     return Info(count, pages, next, prev)
 }
@@ -26,21 +26,21 @@ fun createMockCharacter(
     image: String = "https://example.com/$name.png",
     episode: List<String> = emptyList(),
     url: String = "https://example.com/$name",
-    created: String = "2023-01-01T00:00:00Z"
+    created: String = "2023-01-01T00:00:00Z",
 ): Character {
     return Character(id, name, status, species, type, gender, origin, location, image, episode, url, created)
 }
 
 fun createMockOrigin(
     name: String = "Earth",
-    url: String = "https://example.com/earth"
+    url: String = "https://example.com/earth",
 ): Origin {
     return Origin(name, url)
 }
 
 fun createMockLocation(
     name: String = "Earth",
-    url: String = "https://example.com/earth"
+    url: String = "https://example.com/earth",
 ): Location {
     return Location(name, url)
 }

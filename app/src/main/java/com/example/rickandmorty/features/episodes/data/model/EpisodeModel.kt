@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 
 data class EpisodesResponse(
     val info: Info,
-    val results: List<EpisodeModel>
+    val results: List<EpisodeModel>,
 )
 
 data class Info(
     val count: Int,
     val pages: Int,
     val next: String?,
-    val prev: String?
+    val prev: String?,
 )
 
 data class EpisodeModel(
@@ -22,5 +22,5 @@ data class EpisodeModel(
     val episode: String,
     val characters: List<String>,
     val url: String,
-    val created: String
+    val created: String,
 )

@@ -15,7 +15,7 @@ interface EpisodeRepository {
 }
 
 class EpisodeRepositoryImpl @Inject constructor(
-    private val remoteDataSource: EpisodeRemoteDataSource
+    private val remoteDataSource: EpisodeRemoteDataSource,
 ) : EpisodeRepository {
     override fun getAllEpisodes(page: Int): Single<List<EpisodeModel>> {
         val response = remoteDataSource.getEpisodes(page)

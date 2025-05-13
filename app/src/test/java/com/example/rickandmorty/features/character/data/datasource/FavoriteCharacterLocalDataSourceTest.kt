@@ -27,7 +27,7 @@ class FavoriteCharacterLocalDataSourceTest {
 
         // Mock para a chamada localStorage.getString
         every { localStorage.getString("favorite_characters", "[]") } returns json
-        
+
         val type = mockk<java.lang.reflect.Type>()
         every { jsonSerializer.listType(Character::class.java) } returns type
         every { jsonSerializer.fromJson<List<Character>>(eq(json), eq(type)) } returns existingFavorites
@@ -47,14 +47,14 @@ class FavoriteCharacterLocalDataSourceTest {
         val character = createMockCharacter(id = 1, name = "Rick")
         val existingFavorites = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         val updatedFavorites = listOf(createMockCharacter(id = 2, name = "Morty"))
         val json = "mocked_json"
 
         // Mock para a chamada localStorage.getString
         every { localStorage.getString("favorite_characters", "[]") } returns json
-        
+
         val type = mockk<java.lang.reflect.Type>()
         every { jsonSerializer.listType(Character::class.java) } returns type
         every { jsonSerializer.fromJson<List<Character>>(eq(json), eq(type)) } returns existingFavorites
@@ -73,13 +73,13 @@ class FavoriteCharacterLocalDataSourceTest {
         // Arrange
         val mockFavorites = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         val json = "mocked_json"
 
         // Mock para a chamada localStorage.getString
         every { localStorage.getString("favorite_characters", "[]") } returns json
-        
+
         val type = mockk<java.lang.reflect.Type>()
         every { jsonSerializer.listType(Character::class.java) } returns type
         every { jsonSerializer.fromJson<List<Character>>(eq(json), eq(type)) } returns mockFavorites

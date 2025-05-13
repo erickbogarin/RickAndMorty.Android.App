@@ -17,8 +17,9 @@ class EpisodeFragment : BaseMvvmFragment() {
     private lateinit var paginationHandler: PaginationHandler
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentEpisodeBinding.inflate(inflater)
         return binding.root
@@ -69,7 +70,7 @@ class EpisodeFragment : BaseMvvmFragment() {
             paginationState = vm.paginationState,
             adapter = episodeAdapter,
             callback = vm,
-            tag = "EpisodeFragment"
+            tag = "EpisodeFragment",
         )
         paginationHandler.attach()
     }

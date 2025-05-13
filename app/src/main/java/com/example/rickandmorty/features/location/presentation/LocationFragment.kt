@@ -18,8 +18,9 @@ class LocationFragment : BaseMvvmFragment() {
     private lateinit var paginationHandler: PaginationHandler
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentLocationBinding.inflate(inflater)
         return binding.root
@@ -55,7 +56,7 @@ class LocationFragment : BaseMvvmFragment() {
             paginationState = vm.paginationState,
             adapter = locationAdapter,
             callback = vm,
-            tag = "LocationFragment"
+            tag = "LocationFragment",
         )
         paginationHandler.attach()
     }

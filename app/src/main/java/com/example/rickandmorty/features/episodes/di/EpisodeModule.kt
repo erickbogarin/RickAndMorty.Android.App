@@ -3,8 +3,6 @@ package com.example.rickandmorty.features.episodes.di
 import androidx.lifecycle.ViewModel
 import com.example.rickandmorty.commons.di.FragmentScope
 import com.example.rickandmorty.config.ViewModelKey
-import com.example.rickandmorty.features.character.data.CharacterRepository
-import com.example.rickandmorty.features.character.data.CharacterRepositoryImpl
 import com.example.rickandmorty.features.episodes.data.datasource.EpisodeRemoteDataSource
 import com.example.rickandmorty.features.episodes.data.repository.EpisodeRepository
 import com.example.rickandmorty.features.episodes.data.repository.EpisodeRepositoryImpl
@@ -18,15 +16,14 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 abstract class EpisodeModuleBuilder {
     @FragmentScope
     @ContributesAndroidInjector(
         modules = [
-            EpisodeModule::class
-        ]
+            EpisodeModule::class,
+        ],
     )
     abstract fun provideEpisodeFragment(): EpisodeFragment
 }

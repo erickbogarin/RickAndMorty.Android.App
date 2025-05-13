@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 class ActivityVMFragmentDelegate<T : BaseViewModel>(
     private val clazz: KClass<T>,
-    private val vmFactory: () -> ViewModelProvider.Factory
+    private val vmFactory: () -> ViewModelProvider.Factory,
 ) : ReadOnlyProperty<Fragment, T> {
 
     var cache: T? = null

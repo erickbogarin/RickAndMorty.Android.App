@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class EpisodeViewModel @Inject constructor(
-    private val getEpisodesUseCase: GetEpisodesUseCase
+    private val getEpisodesUseCase: GetEpisodesUseCase,
 ) : BaseViewModel(), PaginationCallback {
 
     val episodes = MutableLiveData<List<EpisodeModel>>()
@@ -44,7 +44,7 @@ class EpisodeViewModel @Inject constructor(
                     } else {
                         Log.e("Episodes", error.message.orEmpty())
                     }
-                }
+                },
             )
     }
 

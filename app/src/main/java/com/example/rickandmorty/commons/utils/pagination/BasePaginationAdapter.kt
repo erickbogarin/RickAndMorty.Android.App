@@ -15,7 +15,7 @@ object EndOfListItem : SpecialListItem
 abstract class BasePaginationAdapter<T, VH : RecyclerView.ViewHolder>(
     private val viewTypeItem: Int,
     private val viewTypeLoading: Int,
-    private val viewTypeEndOfList: Int
+    private val viewTypeEndOfList: Int,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), PaginationAdapter {
 
     private val itemSet: LinkedHashSet<T> = LinkedHashSet()
@@ -103,7 +103,9 @@ abstract class BasePaginationAdapter<T, VH : RecyclerView.ViewHolder>(
     }
     private fun createEndOfListViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         val binding = ItemEndOfListBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+            LayoutInflater.from(parent.context),
+            parent,
+            false,
         )
         binding.endOfListContainer.setOnClickListener {
             Log.d("BasePaginationAdapter", "End of List clicked") // Log para depuração

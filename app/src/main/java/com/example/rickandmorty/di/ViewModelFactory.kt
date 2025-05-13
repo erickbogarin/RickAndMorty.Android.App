@@ -3,16 +3,13 @@ package com.example.rickandmorty.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
-import dagger.MapKey
+import dagger.Module
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
-import dagger.Module
-import kotlin.reflect.KClass
 
 @Suppress("UNCHECKED_CAST")
 class DaggerViewModelFactory @Inject constructor(
-    private val viewModelsMap: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
+    private val viewModelsMap: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>,
 ) :
     ViewModelProvider.Factory {
 

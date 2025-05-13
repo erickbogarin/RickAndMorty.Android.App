@@ -12,7 +12,7 @@ interface FavoriteCharacterRepository {
 }
 
 class FavoriteCharacterRepositoryImpl @Inject constructor(
-    private val localDataSource: FavoriteCharacterLocalDataSource
+    private val localDataSource: FavoriteCharacterLocalDataSource,
 ) : FavoriteCharacterRepository {
 
     override fun saveFavorite(character: Character) {

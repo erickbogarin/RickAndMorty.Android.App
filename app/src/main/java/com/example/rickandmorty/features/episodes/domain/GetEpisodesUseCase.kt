@@ -10,7 +10,7 @@ interface GetEpisodesUseCase {
 }
 
 class GetEpisodesUseCaseImpl @Inject constructor(
-    private val repository: EpisodeRepository
-): GetEpisodesUseCase {
+    private val repository: EpisodeRepository,
+) : GetEpisodesUseCase {
     override fun execute(page: Int): Single<List<EpisodeModel>> = repository.getAllEpisodes(page)
 }

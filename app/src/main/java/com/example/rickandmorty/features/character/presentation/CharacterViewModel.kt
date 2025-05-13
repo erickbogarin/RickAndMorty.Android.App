@@ -60,7 +60,7 @@ class CharacterViewModel @Inject constructor(
                     } else {
                         Log.e("CharacterViewModel", error.message.orEmpty())
                     }
-                }
+                },
             )
     }
 

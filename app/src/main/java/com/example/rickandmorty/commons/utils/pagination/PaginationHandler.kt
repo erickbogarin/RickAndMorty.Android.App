@@ -1,7 +1,6 @@
 package com.example.rickandmorty.commons.utils.pagination
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +40,7 @@ class PaginationHandler(
     private val adapter: PaginationAdapter,
     private val callback: PaginationCallback,
     private val debounceDelay: Long = 300L,
-    private val tag: String = "PaginationHandler"
+    private val tag: String = "PaginationHandler",
 ) {
     private var debounceJob: Job? = null
 
@@ -70,7 +69,7 @@ class PaginationHandler(
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
         val shouldLoad = visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
-                firstVisibleItemPosition >= 0
+            firstVisibleItemPosition >= 0
 
         Log.d(tag, "shouldLoadMoreItems: $shouldLoad")
         return shouldLoad

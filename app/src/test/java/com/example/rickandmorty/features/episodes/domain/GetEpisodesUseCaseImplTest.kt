@@ -1,6 +1,5 @@
 package com.example.rickandmorty.features.episodes.domain
 
-import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 import com.example.rickandmorty.features.episodes.data.repository.EpisodeRepository
 import com.example.rickandmorty.utils.episode.createMockEpisode
 import io.mockk.every
@@ -19,7 +18,7 @@ class GetEpisodesUseCaseImplTest {
         // Arrange
         val mockEpisodes = listOf(
             createMockEpisode(id = 1, name = "Pilot"),
-            createMockEpisode(id = 2, name = "Lawnmower Dog")
+            createMockEpisode(id = 2, name = "Lawnmower Dog"),
         )
         every { repository.getAllEpisodes(1) } returns Single.just(mockEpisodes)
 

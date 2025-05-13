@@ -19,7 +19,7 @@ class GetCharactersUseCaseImplTest {
         // Arrange
         val mockCharacters = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         every { repository.getAllCharacters(1) } returns Single.just(mockCharacters)
 

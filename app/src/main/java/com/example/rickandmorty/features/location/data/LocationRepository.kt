@@ -14,7 +14,7 @@ interface LocationRepository {
 }
 
 class LocationRepositoryImpl @Inject constructor(
-    private val service: LocationApiService
+    private val service: LocationApiService,
 ) : LocationRepository {
     override fun getAllLocations(page: Int): Single<List<Location>> {
         return service.getLocations(page).map { response: Response<LocationResponse> ->

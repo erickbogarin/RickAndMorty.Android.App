@@ -8,8 +8,8 @@ import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class FavoriteCharacterRepositoryImplTest {
@@ -48,7 +48,7 @@ class FavoriteCharacterRepositoryImplTest {
         // Arrange
         val mockFavorites = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         every { localDataSource.getFavorites() } returns mockFavorites
 

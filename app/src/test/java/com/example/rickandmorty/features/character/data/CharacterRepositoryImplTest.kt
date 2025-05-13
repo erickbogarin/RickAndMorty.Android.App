@@ -27,7 +27,7 @@ class CharacterRepositoryImplTest {
         val mockInfo = createMockInfo()
         val mockCharacters = listOf(
             createMockCharacter(id = 1, name = "Rick"),
-            createMockCharacter(id = 2, name = "Morty")
+            createMockCharacter(id = 2, name = "Morty"),
         )
         val mockResponse = Response.success(CharacterResponse(info = mockInfo, results = mockCharacters))
         every { service.getCharacters(1) } returns Single.just(mockResponse)

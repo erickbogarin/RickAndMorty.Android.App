@@ -10,7 +10,7 @@ interface GetCharactersUseCase {
 }
 
 class GetCharactersUseCaseImpl @Inject constructor(
-    private val repository: CharacterRepository
-): GetCharactersUseCase {
+    private val repository: CharacterRepository,
+) : GetCharactersUseCase {
     override fun execute(page: Int): Single<List<Character>> = repository.getAllCharacters(page)
 }

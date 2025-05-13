@@ -9,7 +9,7 @@ interface GetFavoritesUseCase {
 }
 
 class GetFavoritesUseCaseImpl @Inject constructor(
-    private val repository: FavoriteCharacterRepository
+    private val repository: FavoriteCharacterRepository,
 ) : GetFavoritesUseCase {
     override fun execute(): List<Character> = repository.getFavorites()
 }
