@@ -9,32 +9,37 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     env:
-      ADB_INSTALL_TIMEOUT: 20
       JAVA_VERSION: 17
+      AVD_NAME: test
+      API_LEVEL: 30
+      ABI: x86_64
+      TAG: default
 
     steps:
-      # Checkout do código fonte
       - name: Checkout source
         uses: actions/checkout@v4
 
-      # Configuração do JDK
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'  # ou 'zulu', 'corretto', etc
+          distribution: 'temurin'
           java-version: ${{ env.JAVA_VERSION }}
 
-      # Configuração do Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
 
-      # Tornar o gradlew executável
+      - name: Accept licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Update SDK tools
+        run: sdkmanager --update
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      # Cache do Gradle para otimizar os tempos de build
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -45,104 +50,90 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
-      # Verificar a formatação de código com Spotless
       - name: Check Code Formatting
         run: ./gradlew spotlessCheck
 
-      # Rodar análise estática com Detekt
       - name: Run Static Analysis
         run: ./gradlew detekt
 
-      # Rodar Lint
       - name: Run Lint
         run: ./gradlew lint
 
-      # Rodar os testes unitários com cobertura de código
       - name: Run Unit Tests with Coverage
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
-      # Gerar o relatório de cobertura de testes
       - name: Generate Test Coverage Report
         run: ./gradlew jacocoTestReport
 
-      # Fazer o upload do relatório de cobertura
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: app/build/reports/jacoco/jacocoTestReport/html
 
-      # Construção do APK
       - name: Build project
         run: ./gradlew assembleDebug
 
-      # Construção do APK de testes Android
       - name: Build AndroidTest APK
         run: ./gradlew assembleAndroidTest
 
-       # Criar e baixar as imagens de sistema necessárias para o emulador
+      - name: Kill old emulator processes
+        run: |
+          adb kill-server || true
+          pkill -f emulator || true
+
       - name: Install system image for AVD
         run: |
-          sdkmanager "system-images;android-30;default;x86_64"
-          sdkmanager --list # Verifique se a imagem foi instalada corretamente
-        
-      - name: Accept licenses
-        run: yes | sdkmanager --licenses
+          sdkmanager "system-images;android-${{ env.API_LEVEL }};${{ env.TAG }};${{ env.ABI }}"
+          sdkmanager --list | grep "system-images;android-${{ env.API_LEVEL }};${{ env.TAG }};${{ env.ABI }}" || {
+            echo "::error ::System image not found after install."
+            exit 1
+          }
 
-      - name: Create AVD and start emulator
+      - name: Create AVD
         run: |
-          echo "📦 Installing system image..."
-          sdkmanager "system-images;android-30;default;x86_64"
+          echo "no" | avdmanager create avd -n ${{ env.AVD_NAME }} -k "system-images;android-${{ env.API_LEVEL }};${{ env.TAG }};${{ env.ABI }}" --force
 
-          echo "🛠️ Creating AVD..."
-          echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
+      - name: Start emulator
+        run: |
+          $ANDROID_HOME/emulator/emulator -avd ${{ env.AVD_NAME }} -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -verbose -no-snapshot &
+          sleep 5
+          pgrep emulator || { echo "::error ::Emulator process not running."; exit 1; }
 
-          echo "🚀 Starting emulator..."
-          emulator -avd test -no-audio -no-window -gpu swiftshader_indirect -snapshot mySnapshot &
-
-          echo "⌛ Waiting for emulator to boot (timeout: 15 min)..."
+      - name: Wait for emulator to boot
+        run: |
+          adb wait-for-device
           boot_completed=""
-
-          for i in {1..900}; do
+          timeout=900
+          while [[ "$boot_completed" != "1" && $timeout -gt 0 ]]; do
             boot_completed=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-            if [[ "$boot_completed" == "1" ]]; then
-              echo "✅ Emulator booted successfully!"
-              break
-            fi
-            if (( $i % 30 == 0 )); then
-              echo "⏳ Still waiting... $i seconds"
-              adb devices
-            fi
-            sleep 1
+            echo "Waiting for boot... $timeout seconds left"
+            sleep 5
+            timeout=$((timeout - 5))
           done
-
           if [[ "$boot_completed" != "1" ]]; then
-            echo "❌ Emulator failed to boot. Timeout reached."
+            echo "::error ::Emulator failed to boot."
             adb devices
-            emulator -list-avds
-            ps aux | grep emulator
+            adb logcat -d || true
             exit 1
           fi
-
-          echo "📱 Sending unlock keyevent..."
+          echo "✅ Emulator booted successfully."
           adb shell input keyevent 82
 
+      - name: Print emulator info
+        run: adb shell getprop | grep version
 
-      # Rodar os testes de instrumentação
       - name: Run Instrumentation Tests
         run: ./gradlew connectedCheck --stacktrace
 
-      # Fazer o upload do APK gerado
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug.apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      # Reivindicar daemons do Gradle
       - name: Reclaim Gradle Daemons
         run: ./gradlew --stop
 
-      # Rodar verificações finais (ajuda a garantir que tudo esteja em ordem)
       - name: Final Checks
         run: ./gradlew check --stacktrace
