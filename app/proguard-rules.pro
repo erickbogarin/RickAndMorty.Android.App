@@ -1,21 +1,60 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# --- Retrofit + Gson ---
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
+-keep class com.google.gson.** { *; }
+-dontwarn com.google.gson.**
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Retrofit: preserve model classes with Gson annotations
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+-keepattributes Signature
+-keepattributes *Annotation*
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# RxJava
+-dontwarn sun.misc.**
+-dontwarn io.reactivex.**
+-keepclassmembers class rx.internal.util.unsafe.* {
+    long p*;
+}
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Para Gson
+-keep class com.example.rickandmorty.**.model.** { *; }
+-keepclassmembers class com.example.rickandmorty.**.model.** {
+    <fields>;
+}
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# --- AndroidX Lifecycle (ViewModel, LiveData) ---
+-keepclassmembers class * extends androidx.lifecycle.ViewModel {
+    <init>();
+}
+-keep class androidx.lifecycle.ViewModel
+-keep class androidx.lifecycle.MutableLiveData
+-keep class androidx.lifecycle.LiveData
+
+# --- Navigation Component ---
+-keepclassmembers class * {
+    @androidx.navigation.NavArgs <methods>;
+}
+-keep class ** implements androidx.navigation.NavArgs
+
+# --- ViewBinding / DataBinding ---
+-keep class **.databinding.*Binding { *; }
+-keep class **.databinding.* { *; }
+-keepclassmembers class * extends androidx.databinding.ViewDataBinding {
+    public static <fields>;
+    public static <methods>;
+}
+
+# --- Logging ---
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** i(...);
+    public static *** w(...);
+    public static *** e(...);
+}
+
+# -dontoptimize
