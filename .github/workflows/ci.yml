@@ -52,19 +52,14 @@ jobs:
         name: coverage-report
         path: app/build/reports/jacoco/jacocoTestReport/html
 
-    - name: Set up Android Environment
-      uses: android-actions/setup-android@v2
-
-    - name: Start Android Emulator
-      run: |
-        echo "Installing AVD dependencies..."
-        sudo apt-get update -y
-        sudo apt-get install -y qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils
-        echo "Starting Android emulator..."
-        nohup emulator -avd test -no-window -no-audio -no-snapshot -gpu swiftshader_indirect &
-
-    - name: Wait for Emulator to Start
-      run: adb wait-for-device
+    - name: Set up Android Emulator
+      uses: reactivecircus/android-emulator-runner@v2
+      with:
+        api-level: 30
+        target: google_apis
+        arch: x86_64
+        profile: pixel_4
+        script: ./gradlew connectedAndroidTest
 
     - name: Run Instrumented Tests
       run: ./gradlew connectedAndroidTest
