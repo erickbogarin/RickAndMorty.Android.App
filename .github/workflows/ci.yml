@@ -19,11 +19,11 @@ jobs:
     - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '11'
+        java-version: '17'  # Update to Java 17
         distribution: 'temurin'
 
     - name: Set Gradle Wrapper as Executable
-      run: chmod +x ./gradlew  # Add this step to fix the permission issue
+      run: chmod +x ./gradlew
 
     - name: Install dependencies
       run: ./gradlew dependencies
