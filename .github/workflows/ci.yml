@@ -71,7 +71,7 @@ jobs:
         ndk-version: 'latest'
 
     - name: Start Android Emulator
-      uses: android-actions/start-emulator@v3
+      uses: android-actions/start-emulator@main
       with:
         api-level: ${{ steps.setup_android.outputs.sdk-version }}
         arch: x86_64
