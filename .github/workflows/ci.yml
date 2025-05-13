@@ -70,11 +70,15 @@ jobs:
         sdk-version: '33'
         ndk-version: 'latest'
 
+    - name: Install Required System Image
+      run: |
+        echo yes | sdkmanager "system-images;android-33;google_apis_playstore;x86_64"
+
     - name: Create and Start Emulator
       run: |
         echo "no" | avdmanager create avd -n test-avd -k "system-images;android-33;google_apis_playstore;x86_64" --force
         emulator -avd test-avd -no-window -gpu swiftshader_indirect -no-audio -no-boot-anim &
-        adb wait-for-device shell 'pm list packages' # Espera o emulador iniciar
+        adb wait-for-device shell 'pm list packages' # Wait for emulator to start
 
     - name: Run Instrumented Tests
       run: |
