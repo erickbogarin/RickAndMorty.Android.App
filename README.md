@@ -68,5 +68,3 @@ This project uses a modern CI pipeline integrated with GitHub Actions and Gradle
   Security dependencies are managed and locked to specific versions to ensure a safe build process.
 
 ---
-
-Let me know if you’d like to add usage instructions or more details about any aspect of the project!
