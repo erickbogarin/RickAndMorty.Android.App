@@ -1,5 +1,7 @@
 # RickAndMorty.Android.App
 
+[![Build Status](https://github.com/erickbogarin/RickAndMorty.Android.App/actions/workflows/main.yml/badge.svg)](https://github.com/erickbogarin/RickAndMorty.Android.App/actions/workflows/main.yml)
+
 This project is an Android application developed in Kotlin that consumes the Rick and Morty API. Below you’ll find key information about the project’s architecture, main technologies, and CI setup.
 
 ---
