@@ -1,34 +1,27 @@
 <resources>
-    <!-- Cores principais - versão escura -->
-    <color name="colorPrimary">#5CCFEF</color>         <!-- Azul ciano mais claro para contraste -->
-    <color name="colorPrimaryDark">#083A56</color>     <!-- Azul escuro mais saturado -->
-    <color name="colorAccent">#B9A5FF</color>          <!-- Lilás mais claro para modo escuro -->
-    <color name="colorSecondary">#6D88A6</color>       <!-- Azul acinzentado mais claro -->
+    <color name="colorPrimary">#63D7FF</color>
+    <color name="colorPrimaryDark">#0D1626</color>
+    <color name="colorAccent">#9BFF7A</color>
+    <color name="colorSecondary">#7FE6FF</color>
 
-    <!-- Cores de background - versão escura -->
-    <color name="colorBackground">#121212</color>      <!-- Fundo escuro padrão -->
-    <color name="colorSurface">#1E1E1E</color>         <!-- Superfície para cards no modo escuro -->
+    <color name="colorBackground">#0B1220</color>
+    <color name="colorSurface">#132033</color>
 
-    <!-- Cores de texto - versão escura -->
-    <color name="colorTextPrimary">#FFFFFF</color>     <!-- Branco puro para texto principal -->
-    <color name="colorTextSecondary">#CCCCCC</color>   <!-- Cinza claro para texto secundário -->
-    <color name="colorTextOnDark">#F5F5F5</color>      <!-- Branco suave para texto sobre fundos escuros -->
+    <color name="colorTextPrimary">#F4FBFF</color>
+    <color name="colorTextSecondary">#A7C0D1</color>
+    <color name="colorTextOnDark">#F4FBFF</color>
 
-    <!-- Cores para botões e destaques - versão escura -->
-    <color name="colorButton">#5CCFEF</color>          <!-- Azul ciano mais claro para botões -->
-    <color name="colorHighlight">#B9A5FF</color>       <!-- Lilás mais claro para destaques -->
+    <color name="colorButton">#63D7FF</color>
+    <color name="colorHighlight">#D8FF3E</color>
 
-    <!-- Cor de erro - versão escura -->
-    <color name="colorError">#FF6B6B</color>           <!-- Vermelho mais claro para modo escuro -->
+    <color name="colorError">#FF7A7F</color>
 
-    <!-- Cores adicionais - versão escura -->
-    <color name="colorDivider">#2C2C2C</color>         <!-- Divisores escuros mais sutis -->
-    <color name="colorInactive">#888888</color>        <!-- Elementos desativados com contraste melhorado -->
-    <color name="colorOverlay">#B3000000</color>       <!-- Overlay escuro -->
-    
-    <!-- Cores especiais para navegação inferior no tema escuro -->
-    <color name="colorBackgroundDark">#121212</color>
-    <color name="colorSurfaceDark">#1E1E1E</color>
-    <color name="colorTextPrimaryDark">#FFFFFF</color> <!-- Branco puro para texto principal -->
-    <color name="colorSecondaryDark">#A0A9B8</color>  <!-- Azul acinzentado mais claro -->
+    <color name="colorDivider">#22344A</color>
+    <color name="colorInactive">#6E8298</color>
+    <color name="colorOverlay">#B3000912</color>
+
+    <color name="colorBackgroundDark">#0B1220</color>
+    <color name="colorSurfaceDark">#132033</color>
+    <color name="colorTextPrimaryDark">#F4FBFF</color>
+    <color name="colorSecondaryDark">#7FE6FF</color>
 </resources>

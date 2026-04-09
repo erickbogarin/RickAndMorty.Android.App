@@ -1,7 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Rickandmorty" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize light theme here -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
         <item name="colorOnPrimary">@color/colorTextOnDark</item>
@@ -15,20 +13,18 @@
         <item name="colorOnError">@color/colorTextOnDark</item>
     </style>
 
-
-    <!-- 1. Adicione este estilo ao arquivo styles.xml -->
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.BottomNavigationView</item>
         <item name="backgroundTint">@color/colorSurface</item>
         <item name="itemIconTint">@color/bottom_nav_item_color</item>
         <item name="itemTextColor">@color/bottom_nav_item_color</item>
-        <item name="itemRippleColor">@color/colorPrimary</item>
+        <item name="itemRippleColor">@color/colorAccent</item>
         <item name="itemActiveIndicatorStyle">@style/App.ActiveIndicator.BottomNavigationView</item>
     </style>
 
     <style name="ThemeOverlay.App.BottomNavigationView" parent="">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorOnPrimary">@color/colorSecondary</item>
+        <item name="colorOnPrimary">@color/colorPrimaryDark</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/colorTextPrimary</item>
     </style>
@@ -38,7 +34,7 @@
     </style>
 
     <style name="Theme.Rickandmorty.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#D0E8F2</item>
+        <item name="windowSplashScreenBackground">#DDF9D6</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.Rickandmorty</item>
     </style>
@@ -48,5 +44,14 @@
         <item name="cornerSizeTopRight">16dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Widget.App.CharacterFilterChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/character_chip_background</item>
+        <item name="chipStrokeColor">@color/character_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="android:textColor">@color/character_chip_text</item>
+        <item name="rippleColor">@color/colorAccent</item>
     </style>
 </resources>

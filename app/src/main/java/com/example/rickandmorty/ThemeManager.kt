@@ -8,11 +8,11 @@ import androidx.appcompat.widget.SwitchCompat
 
 class ThemeManager(private val activity: AppCompatActivity) {
     fun setupThemeSwitch(themeSwitch: SwitchCompat) {
-        // Configure o estado inicial
         themeSwitch.isChecked = isDarkThemeActive()
+        updateThemeSwitchLabel(themeSwitch, themeSwitch.isChecked)
 
-        // Adiciona listener
         themeSwitch.setOnCheckedChangeListener { _, isChecked ->
+            updateThemeSwitchLabel(themeSwitch, isChecked)
             applyTheme(isChecked)
         }
     }
@@ -40,5 +40,9 @@ class ThemeManager(private val activity: AppCompatActivity) {
                 },
             )
         }
+    }
+
+    private fun updateThemeSwitchLabel(themeSwitch: SwitchCompat, isDarkMode: Boolean) {
+        themeSwitch.text = if (isDarkMode) "Dark Mode" else "Light Mode"
     }
 }
