@@ -1,5 +1,6 @@
 package com.example.rickandmorty.features.episodes.domain
 
+import com.example.rickandmorty.commons.pagination.PaginatedResult
 import com.example.rickandmorty.features.episodes.data.repository.EpisodeRepository
 import com.example.rickandmorty.utils.episode.createMockEpisode
 import io.mockk.every
@@ -14,28 +15,24 @@ class GetEpisodesUseCaseImplTest {
     private val useCase = GetEpisodesUseCaseImpl(repository)
 
     @Test
-    fun `execute should return a list of episodes when repository call is successful`() {
-        // Arrange
+    fun `execute should return paginated episodes when repository call is successful`() {
         val mockEpisodes = listOf(
             createMockEpisode(id = 1, name = "Pilot"),
             createMockEpisode(id = 2, name = "Lawnmower Dog"),
         )
-        every { repository.getAllEpisodes(1) } returns Single.just(mockEpisodes)
+        val paginatedResult = PaginatedResult(mockEpisodes, hasNextPage = true)
+        every { repository.getAllEpisodes(1) } returns Single.just(paginatedResult)
 
-        // Act
         val result = useCase.execute(1).blockingGet()
 
-        // Assert
-        assertEquals(mockEpisodes, result)
+        assertEquals(paginatedResult, result)
     }
 
     @Test
     fun `execute should propagate error when repository call fails`() {
-        // Arrange
         val exception = RuntimeException("Repository error")
         every { repository.getAllEpisodes(1) } returns Single.error(exception)
 
-        // Act & Assert
         val thrownException = org.junit.jupiter.api.assertThrows<RuntimeException> {
             useCase.execute(1).blockingGet()
         }

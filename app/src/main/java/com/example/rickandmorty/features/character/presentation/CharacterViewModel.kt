@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import com.example.rickandmorty.commons.baseui.BaseViewModel
-import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.character.data.model.Character
@@ -44,22 +43,30 @@ class CharacterViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     override fun onLoadMore() {
-        if (_showOnlyFavorites.value == true || paginationState.isLastPage.value == true) return
+        if (_showOnlyFavorites.value == true ||
+            paginationState.isLastPage.value == true ||
+            paginationState.isLoading.value == true
+        ) {
+            return
+        }
 
-        getCharactersUseCase.execute(paginationState.currentPage.value ?: 1)
+        paginationState.startLoading()
+        compositeDisposable + getCharactersUseCase.execute(paginationState.currentPage.value ?: 1)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { newCharacters ->
-                    _allCharacters.value = _allCharacters.value.orEmpty() + newCharacters
-                    paginationState.incrementCurrentPage()
+                { result ->
+                    paginationState.finishLoading()
+                    _allCharacters.value = _allCharacters.value.orEmpty() + result.items
+                    if (result.hasNextPage) {
+                        paginationState.advancePage()
+                    } else {
+                        paginationState.markAsLastPage()
+                    }
                 },
                 { error ->
-                    if (error is EndOfListException) {
-                        paginationState.markAsLastPage()
-                    } else {
-                        Log.e("CharacterViewModel", error.message.orEmpty())
-                    }
+                    paginationState.finishLoading()
+                    Log.e("CharacterViewModel", error.message.orEmpty())
                 },
             )
     }

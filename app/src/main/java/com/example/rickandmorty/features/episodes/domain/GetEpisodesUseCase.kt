@@ -1,16 +1,17 @@
 package com.example.rickandmorty.features.episodes.domain
 
+import com.example.rickandmorty.commons.pagination.PaginatedResult
 import com.example.rickandmorty.features.episodes.data.model.EpisodeModel
 import com.example.rickandmorty.features.episodes.data.repository.EpisodeRepository
 import io.reactivex.Single
 import javax.inject.Inject
 
 interface GetEpisodesUseCase {
-    fun execute(page: Int): Single<List<EpisodeModel>>
+    fun execute(page: Int): Single<PaginatedResult<EpisodeModel>>
 }
 
 class GetEpisodesUseCaseImpl @Inject constructor(
     private val repository: EpisodeRepository,
 ) : GetEpisodesUseCase {
-    override fun execute(page: Int): Single<List<EpisodeModel>> = repository.getAllEpisodes(page)
+    override fun execute(page: Int): Single<PaginatedResult<EpisodeModel>> = repository.getAllEpisodes(page)
 }

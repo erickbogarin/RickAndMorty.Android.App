@@ -1,6 +1,5 @@
 package com.example.rickandmorty.commons.utils.pagination
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +38,7 @@ class PaginationHandler(
     private val paginationState: PaginationState,
     private val adapter: PaginationAdapter,
     private val callback: PaginationCallback,
+    private val visibleThreshold: Int = 5,
     private val debounceDelay: Long = 300L,
     private val tag: String = "PaginationHandler",
 ) {
@@ -63,22 +63,23 @@ class PaginationHandler(
     }
 
     private fun shouldLoadMoreItems(layoutManager: LinearLayoutManager): Boolean {
-        if (paginationState.isLastPage.value == true) return false
+        if (paginationState.isLastPage.value == true || paginationState.isLoading.value == true) return false
 
         val visibleItemCount = layoutManager.childCount
         val totalItemCount = layoutManager.itemCount
         val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        val shouldLoad = visibleItemCount + firstVisibleItemPosition >= totalItemCount &&
+        val shouldLoad = visibleItemCount + firstVisibleItemPosition >= totalItemCount - visibleThreshold &&
+            totalItemCount > 0 &&
             firstVisibleItemPosition >= 0
 
-        Log.d(tag, "shouldLoadMoreItems: $shouldLoad")
         return shouldLoad
     }
 
     private fun loadMoreItems() {
+        if (paginationState.isLoading.value == true || paginationState.isLastPage.value == true) return
+
         adapter.addLoadingView()
         callback.onLoadMore()
-        Log.d(tag, "Loading more items for page ${paginationState.currentPage.value}")
     }
 
     /**

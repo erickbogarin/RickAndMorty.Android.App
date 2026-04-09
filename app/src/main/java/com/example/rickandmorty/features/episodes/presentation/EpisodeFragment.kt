@@ -41,7 +41,12 @@ class EpisodeFragment : BaseMvvmFragment() {
         vm.episodes.observe(viewLifecycleOwner) { episodes ->
             episodeAdapter.removeLoadingView()
             episodeAdapter.addItems(episodes.map { ListItem.EpisodeItem(it) })
-            binding.recyclerViewEpisodes.scrollToPosition(episodeAdapter.itemCount - episodes.size)
+        }
+
+        vm.paginationState.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (!isLoading) {
+                episodeAdapter.removeLoadingView()
+            }
         }
 
         vm.endOfList.observe(viewLifecycleOwner) { endOfList ->

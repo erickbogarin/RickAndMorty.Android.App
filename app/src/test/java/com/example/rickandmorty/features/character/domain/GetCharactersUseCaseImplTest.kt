@@ -1,5 +1,6 @@
 package com.example.rickandmorty.features.character.domain
 
+import com.example.rickandmorty.commons.pagination.PaginatedResult
 import com.example.rickandmorty.features.character.data.CharacterRepository
 import com.example.rickandmorty.utils.character.createMockCharacter
 import io.mockk.every
@@ -15,28 +16,24 @@ class GetCharactersUseCaseImplTest {
     private val useCase = GetCharactersUseCaseImpl(repository)
 
     @Test
-    fun `execute should return a list of characters when repository call is successful`() {
-        // Arrange
+    fun `execute should return paginated characters when repository call is successful`() {
         val mockCharacters = listOf(
             createMockCharacter(id = 1, name = "Rick"),
             createMockCharacter(id = 2, name = "Morty"),
         )
-        every { repository.getAllCharacters(1) } returns Single.just(mockCharacters)
+        val paginatedResult = PaginatedResult(mockCharacters, hasNextPage = true)
+        every { repository.getAllCharacters(1) } returns Single.just(paginatedResult)
 
-        // Act
         val result = useCase.execute(1).blockingGet()
 
-        // Assert
-        assertEquals(mockCharacters, result)
+        assertEquals(paginatedResult, result)
     }
 
     @Test
     fun `execute should throw an exception when repository call fails`() {
-        // Arrange
         val errorMessage = "Network error"
         every { repository.getAllCharacters(1) } returns Single.error(RuntimeException(errorMessage))
 
-        // Act & Assert
         val exception = assertThrows(RuntimeException::class.java) {
             useCase.execute(1).blockingGet()
         }

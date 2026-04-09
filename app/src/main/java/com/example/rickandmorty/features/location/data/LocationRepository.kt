@@ -1,6 +1,6 @@
 package com.example.rickandmorty.features.location.data
 
-import com.example.rickandmorty.commons.exceptions.EndOfListException
+import com.example.rickandmorty.commons.pagination.PaginatedResult
 import com.example.rickandmorty.commons.exceptions.ResourceException
 import com.example.rickandmorty.features.location.data.model.Location
 import com.example.rickandmorty.features.location.data.model.LocationResponse
@@ -10,24 +10,24 @@ import retrofit2.Response
 import javax.inject.Inject
 
 interface LocationRepository {
-    fun getAllLocations(page: Int): Single<List<Location>>
+    fun getAllLocations(page: Int): Single<PaginatedResult<Location>>
 }
 
 class LocationRepositoryImpl @Inject constructor(
     private val service: LocationApiService,
 ) : LocationRepository {
-    override fun getAllLocations(page: Int): Single<List<Location>> {
+    override fun getAllLocations(page: Int): Single<PaginatedResult<Location>> {
         return service.getLocations(page).map { response: Response<LocationResponse> ->
             if (response.isSuccessful) {
-                response.body()?.results ?: throw RuntimeException("Response body is null")
+                val body = response.body() ?: throw RuntimeException("Response body is null")
+                PaginatedResult(
+                    items = body.results,
+                    hasNextPage = body.info.next != null,
+                )
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorResponse = Gson().fromJson(errorBody, ResourceException::class.java)
-                if (errorResponse.error == "There is nothing here") {
-                    throw EndOfListException()
-                } else {
-                    throw RuntimeException(errorBody)
-                }
+                throw RuntimeException(errorResponse.error)
             }
         }
     }

@@ -65,7 +65,12 @@ class LocationFragment : BaseMvvmFragment() {
         vm.locations.observe(viewLifecycleOwner) { locations ->
             locationAdapter.removeLoadingView()
             locationAdapter.addItems(locations.map { ListItem.LocationItem(it) })
-            binding.locationList.scrollToPosition(locationAdapter.itemCount - locations.size)
+        }
+
+        vm.paginationState.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (!isLoading) {
+                locationAdapter.removeLoadingView()
+            }
         }
 
         vm.endOfList.observe(viewLifecycleOwner) { endOfList ->

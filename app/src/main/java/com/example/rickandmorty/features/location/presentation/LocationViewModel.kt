@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.rickandmorty.commons.baseui.BaseViewModel
-import com.example.rickandmorty.commons.exceptions.EndOfListException
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
 import com.example.rickandmorty.features.location.data.model.Location
@@ -30,21 +29,25 @@ class LocationViewModel @Inject constructor(
 
     @SuppressLint("CheckResult")
     fun fetchLocations() {
-        if (paginationState.isLastPage.value == true) return
+        if (paginationState.isLastPage.value == true || paginationState.isLoading.value == true) return
 
-        getLocationsUseCase.execute(paginationState.currentPage.value ?: 1)
+        paginationState.startLoading()
+        compositeDisposable + getLocationsUseCase.execute(paginationState.currentPage.value ?: 1)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { newLocations ->
-                    locations.value = locations.value.orEmpty() + newLocations
+                { result ->
+                    paginationState.finishLoading()
+                    locations.value = locations.value.orEmpty() + result.items
+                    if (result.hasNextPage) {
+                        paginationState.advancePage()
+                    } else {
+                        paginationState.markAsLastPage()
+                    }
                 },
                 { error ->
-                    if (error is EndOfListException) {
-                        paginationState.markAsLastPage()
-                    } else {
-                        Log.e("LocationViewModel", error.message.orEmpty())
-                    }
+                    paginationState.finishLoading()
+                    Log.e("LocationViewModel", error.message.orEmpty())
                 },
             )
     }

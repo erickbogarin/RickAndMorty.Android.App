@@ -86,7 +86,6 @@ class CharacterFragment : BaseMvvmFragment() {
             SafeObserver { characters ->
                 characterAdapter.removeLoadingView()
                 characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
-                binding.characterList.scrollToPosition(characterAdapter.itemCount - characters.size)
 
                 if (vm.showOnlyFavorites.value == true && characters.isEmpty()) {
                     binding.emptyFavoritesMessage.visibility = View.VISIBLE
@@ -104,6 +103,12 @@ class CharacterFragment : BaseMvvmFragment() {
             }
         }
 
+        vm.paginationState.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (!isLoading) {
+                characterAdapter.removeLoadingView()
+            }
+        }
+
         vm.showOnlyFavorites.observe(viewLifecycleOwner) { showOnlyFavorites ->
             characterAdapter.clear()
             binding.chipFavorites.isChecked = showOnlyFavorites
@@ -115,6 +120,11 @@ class CharacterFragment : BaseMvvmFragment() {
                 paginationHandler.attach()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        paginationHandler.detach()
     }
 
     companion object {
