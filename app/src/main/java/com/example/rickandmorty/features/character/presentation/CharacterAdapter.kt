@@ -7,17 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rickandmorty.R
 import com.example.rickandmorty.commons.utils.pagination.BasePaginationAdapter
 import com.example.rickandmorty.databinding.ItemCardViewBinding
-import com.example.rickandmorty.features.character.data.model.Character
 import com.squareup.picasso.Picasso
 
 sealed class ListItem {
-    data class CharacterItem(val character: Character) : ListItem()
+    data class CharacterItem(val model: CharacterCardUiModel) : ListItem()
 }
 
 class CharacterAdapter(
     private val context: Context,
-    private val onFavoriteClick: (Character) -> Unit,
-    private val isFavorite: (Character) -> Boolean,
+    private val onFavoriteClick: (CharacterCardUiModel) -> Unit,
 ) : BasePaginationAdapter<ListItem.CharacterItem, CharacterAdapter.CardViewHolder>(
     viewTypeItem = 0,
     viewTypeLoading = 1,
@@ -26,7 +24,9 @@ class CharacterAdapter(
 
     inner class CardViewHolder(private val binding: ItemCardViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(character: Character) {
+        fun bind(model: CharacterCardUiModel) {
+            val character = model.character
+
             binding.title.text = character.name
             binding.gender.text = character.species
             binding.origin.text = character.origin.name
@@ -34,32 +34,18 @@ class CharacterAdapter(
             Picasso.get().load(character.image).into(binding.image)
 
             binding.btnFavorite.setImageResource(
-                if (isFavorite(character)) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border,
+                if (model.isFavorite) R.drawable.ic_favorite_filled else R.drawable.ic_favorite_border,
             )
 
             binding.btnFavorite.setOnClickListener {
-                onFavoriteClick(character)
+                onFavoriteClick(model)
             }
         }
     }
 
-    fun updateCharacter(character: Character) {
-        val index = getCurrentItems().indexOfFirst { it.character.id == character.id }
-        if (index != -1) notifyItemChanged(index)
-    }
-
-    fun removeItem(character: Character) {
-        val index = getCurrentItems().indexOfFirst { it.character.id == character.id }
-        if (index != -1) {
-            removeItemAt(index)
-            notifyItemRemoved(index)
-        }
-    }
-
-    fun clear() {
-        val itemCount = itemCount
+    fun submitItems(items: List<ListItem.CharacterItem>) {
         clearItems()
-        notifyItemRangeRemoved(0, itemCount)
+        addItems(items)
     }
 
     override fun onCreateItemViewHolder(parent: ViewGroup): CardViewHolder {
@@ -68,6 +54,6 @@ class CharacterAdapter(
     }
 
     override fun onBindItemViewHolder(holder: CardViewHolder, item: ListItem.CharacterItem) {
-        holder.bind(item.character)
+        holder.bind(item.model)
     }
 }

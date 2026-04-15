@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import com.example.rickandmorty.commons.baseui.BaseViewModel
 import com.example.rickandmorty.commons.utils.pagination.PaginationCallback
 import com.example.rickandmorty.commons.utils.pagination.PaginationState
@@ -16,6 +14,17 @@ import com.example.rickandmorty.features.character.domain.ToggleFavoriteCharacte
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+
+data class CharacterCardUiModel(
+    val character: Character,
+    val isFavorite: Boolean,
+)
+
+data class CharacterUiState(
+    val items: List<CharacterCardUiModel> = emptyList(),
+    val showOnlyFavorites: Boolean = false,
+    val showEmptyFavoritesMessage: Boolean = false,
+)
 
 class CharacterViewModel @Inject constructor(
     private val getCharactersUseCase: GetCharactersUseCase,
@@ -28,18 +37,10 @@ class CharacterViewModel @Inject constructor(
     private val _showOnlyFavorites = MutableLiveData<Boolean>(false)
     val showOnlyFavorites: LiveData<Boolean> = _showOnlyFavorites
 
-    val characters: LiveData<List<Character>> = _allCharacters.switchMap { allCharacters ->
-        _showOnlyFavorites.map { showOnlyFavorites ->
-            if (showOnlyFavorites) {
-                allCharacters.filter { isFavorite(it) }
-            } else {
-                allCharacters
-            }
-        }
-    }
+    private val _uiState = MutableLiveData(CharacterUiState())
+    val uiState: LiveData<CharacterUiState> = _uiState
 
     val paginationState = PaginationState()
-    val favoriteStatus = MutableLiveData<Pair<Character, Boolean>>()
 
     @SuppressLint("CheckResult")
     override fun onLoadMore() {
@@ -58,6 +59,7 @@ class CharacterViewModel @Inject constructor(
                 { result ->
                     paginationState.finishLoading()
                     _allCharacters.value = _allCharacters.value.orEmpty() + result.items
+                    publishUiState()
                     if (result.hasNextPage) {
                         paginationState.advancePage()
                     } else {
@@ -72,23 +74,36 @@ class CharacterViewModel @Inject constructor(
     }
 
     fun toggleFavorite(character: Character) {
-        val isFavorite = toggleFavoriteCharacterUseCase.execute(character)
-        favoriteStatus.value = character to isFavorite
-
-        if (_showOnlyFavorites.value == true) {
-            refreshCharacterList()
-        }
-    }
-
-    fun isFavorite(character: Character): Boolean {
-        return checkFavoriteCharacterUseCase.execute(character)
+        toggleFavoriteCharacterUseCase.execute(character)
+        publishUiState()
     }
 
     fun setShowOnlyFavorites(showOnlyFavorites: Boolean) {
         _showOnlyFavorites.value = showOnlyFavorites
+        publishUiState()
     }
 
-    private fun refreshCharacterList() {
-        _allCharacters.value = _allCharacters.value
+    private fun publishUiState() {
+        val showOnlyFavorites = _showOnlyFavorites.value == true
+        val items = _allCharacters.value.orEmpty()
+            .map { character ->
+                CharacterCardUiModel(
+                    character = character,
+                    isFavorite = checkFavoriteCharacterUseCase.execute(character),
+                )
+            }
+            .let { characters ->
+                if (showOnlyFavorites) {
+                    characters.filter { it.isFavorite }
+                } else {
+                    characters
+                }
+            }
+
+        _uiState.value = CharacterUiState(
+            items = items,
+            showOnlyFavorites = showOnlyFavorites,
+            showEmptyFavoritesMessage = showOnlyFavorites && items.isEmpty(),
+        )
     }
 }

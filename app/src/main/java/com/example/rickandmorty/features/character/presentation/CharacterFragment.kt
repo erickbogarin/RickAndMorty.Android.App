@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.rickandmorty.commons.baseui.BaseMvvmFragment
-import com.example.rickandmorty.commons.baseui.SafeObserver
 import com.example.rickandmorty.commons.utils.pagination.PaginationHandler
 import com.example.rickandmorty.databinding.FragmentCharacterBinding
 
@@ -42,11 +41,8 @@ class CharacterFragment : BaseMvvmFragment() {
     private fun setupRecyclerView() {
         characterAdapter = CharacterAdapter(
             context = requireContext(),
-            onFavoriteClick = { character ->
-                vm.toggleFavorite(character)
-            },
-            isFavorite = { character ->
-                vm.isFavorite(character)
+            onFavoriteClick = { model ->
+                vm.toggleFavorite(model.character)
             },
         )
 
@@ -81,40 +77,21 @@ class CharacterFragment : BaseMvvmFragment() {
     }
 
     private fun setupObservers() {
-        vm.characters.observe(
-            viewLifecycleOwner,
-            SafeObserver { characters ->
-                characterAdapter.removeLoadingView()
-                characterAdapter.addItems(characters.map { ListItem.CharacterItem(it) })
-
-                if (vm.showOnlyFavorites.value == true && characters.isEmpty()) {
-                    binding.emptyFavoritesMessage.visibility = View.VISIBLE
-                } else {
-                    binding.emptyFavoritesMessage.visibility = View.GONE
-                }
-            },
-        )
-
-        vm.favoriteStatus.observe(viewLifecycleOwner) { (character, isFavorite) ->
-            if (vm.showOnlyFavorites.value == true && !isFavorite) {
-                characterAdapter.removeItem(character)
-            } else {
-                characterAdapter.updateCharacter(character)
-            }
-        }
-
         vm.paginationState.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (!isLoading) {
                 characterAdapter.removeLoadingView()
             }
         }
 
-        vm.showOnlyFavorites.observe(viewLifecycleOwner) { showOnlyFavorites ->
-            characterAdapter.clear()
-            binding.chipFavorites.isChecked = showOnlyFavorites
-            binding.chipAll.isChecked = !showOnlyFavorites
+        vm.uiState.observe(viewLifecycleOwner) { uiState ->
+            characterAdapter.removeLoadingView()
+            characterAdapter.submitItems(uiState.items.map { ListItem.CharacterItem(it) })
+            binding.chipFavorites.isChecked = uiState.showOnlyFavorites
+            binding.chipAll.isChecked = !uiState.showOnlyFavorites
+            binding.emptyFavoritesMessage.visibility =
+                if (uiState.showEmptyFavoritesMessage) View.VISIBLE else View.GONE
 
-            if (showOnlyFavorites) {
+            if (uiState.showOnlyFavorites) {
                 paginationHandler.detach()
             } else {
                 paginationHandler.attach()

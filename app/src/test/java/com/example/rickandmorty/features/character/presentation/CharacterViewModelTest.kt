@@ -2,10 +2,9 @@ package com.example.rickandmorty.features.character.presentation
 
 import androidx.lifecycle.Observer
 import com.example.rickandmorty.commons.pagination.PaginatedResult
-import com.example.rickandmorty.features.character.data.model.Character
-import com.example.rickandmorty.features.character.domain.CheckFavoriteCharacterUseCase
 import com.example.rickandmorty.features.character.domain.GetCharactersUseCase
 import com.example.rickandmorty.features.character.domain.ToggleFavoriteCharacterUseCase
+import com.example.rickandmorty.features.character.domain.CheckFavoriteCharacterUseCase
 import com.example.rickandmorty.utils.ViewModelTestExtension
 import com.example.rickandmorty.utils.character.createMockCharacter
 import io.mockk.every
@@ -39,22 +38,25 @@ class CharacterViewModelTest {
     @Test
     fun `onLoadMore should request first page and append new characters to the list`() {
         val character = createMockCharacter(id = 1, name = "Rick")
+        every { checkFavoriteCharacterUseCase.execute(character) } returns false
         every { getCharactersUseCase.execute(1) } returns Single.just(
             PaginatedResult(items = listOf(character), hasNextPage = true),
         )
 
-        viewModel.characters.observeForever {}
+        viewModel.uiState.observeForever {}
         viewModel.onLoadMore()
 
-        assertEquals(listOf(character), viewModel.characters.value)
+        assertEquals(listOf(CharacterCardUiModel(character, false)), viewModel.uiState.value?.items)
         assertEquals(2, viewModel.paginationState.currentPage.value)
         assertFalse(viewModel.paginationState.isLoading.value ?: true)
     }
 
     @Test
     fun `onLoadMore should mark as last page when result has no next page`() {
+        val character = createMockCharacter(id = 1, name = "Rick")
+        every { checkFavoriteCharacterUseCase.execute(character) } returns false
         every { getCharactersUseCase.execute(1) } returns Single.just(
-            PaginatedResult(items = listOf(createMockCharacter(id = 1, name = "Rick")), hasNextPage = false),
+            PaginatedResult(items = listOf(character), hasNextPage = false),
         )
 
         viewModel.onLoadMore()
@@ -81,32 +83,52 @@ class CharacterViewModelTest {
     }
 
     @Test
-    fun `toggleFavorite should update favoriteStatus and refresh list if filtering favorites`() {
+    fun `toggleFavorite should refresh uiState with updated favorite state`() {
         val character = createMockCharacter(id = 1, name = "Rick")
+        every { getCharactersUseCase.execute(1) } returns Single.just(
+            PaginatedResult(items = listOf(character), hasNextPage = true),
+        )
+        every { checkFavoriteCharacterUseCase.execute(character) } returnsMany listOf(false, true)
         every { toggleFavoriteCharacterUseCase.execute(character) } returns true
-        viewModel.setShowOnlyFavorites(true)
 
-        val observer = mockk<Observer<Pair<Character, Boolean>>>(relaxed = true)
-        viewModel.favoriteStatus.observeForever(observer)
+        val observer = mockk<Observer<CharacterUiState>>(relaxed = true)
+        viewModel.uiState.observeForever(observer)
+        viewModel.onLoadMore()
 
         viewModel.toggleFavorite(character)
 
-        verify { observer.onChanged(character to true) }
+        assertEquals(true, viewModel.uiState.value?.items?.single()?.isFavorite)
+        verify(atLeast = 1) { observer.onChanged(any()) }
     }
 
     @Test
-    fun `isFavorite should delegate to use case`() {
-        val character = createMockCharacter(id = 1, name = "Rick")
-        every { checkFavoriteCharacterUseCase.execute(character) } returns true
+    fun `setShowOnlyFavorites should update uiState and filter only favorites`() {
+        val favorite = createMockCharacter(id = 1, name = "Rick")
+        val nonFavorite = createMockCharacter(id = 2, name = "Morty")
+        every { getCharactersUseCase.execute(1) } returns Single.just(
+            PaginatedResult(items = listOf(favorite, nonFavorite), hasNextPage = true),
+        )
+        every { checkFavoriteCharacterUseCase.execute(favorite) } returns true
+        every { checkFavoriteCharacterUseCase.execute(nonFavorite) } returns false
 
-        assertTrue(viewModel.isFavorite(character))
-    }
-
-    @Test
-    fun `setShowOnlyFavorites should update showOnlyFavorites LiveData`() {
+        viewModel.onLoadMore()
         viewModel.setShowOnlyFavorites(true)
-        assertTrue(viewModel.showOnlyFavorites.value == true)
-        viewModel.setShowOnlyFavorites(false)
-        assertTrue(viewModel.showOnlyFavorites.value == false)
+
+        assertTrue(viewModel.uiState.value?.showOnlyFavorites == true)
+        assertEquals(listOf(CharacterCardUiModel(favorite, true)), viewModel.uiState.value?.items)
+    }
+
+    @Test
+    fun `setShowOnlyFavorites should expose empty favorites message when needed`() {
+        val character = createMockCharacter(id = 1, name = "Rick")
+        every { getCharactersUseCase.execute(1) } returns Single.just(
+            PaginatedResult(items = listOf(character), hasNextPage = true),
+        )
+        every { checkFavoriteCharacterUseCase.execute(character) } returns false
+
+        viewModel.onLoadMore()
+        viewModel.setShowOnlyFavorites(true)
+
+        assertTrue(viewModel.uiState.value?.showEmptyFavoritesMessage == true)
     }
 }
